@@ -30,4 +30,50 @@ Error Type : <class 'AttributeError'>
 
 Error Line No : 52
 Error Line Text : 'for link in browser.find_elements_by_xpath('//div[@class="posts-wrapper"]/article/div/div/h2/a'):')
+================================================================================================================================================
+ERROR AAYA HAI
+DateTime : 17/07/2022 20:12:12
+Error Came From : lyrics.py.py
+Error File : lyrics.py
+Error Fun Name : scrap_data
+Error : Message: unknown error: cannot determine loading status
+from unknown error: missing or invalid columnNumber
+  (Session info: headless chrome=103.0.5060.114)
+Stacktrace:
+Backtrace:
+	Ordinal0 [0x00FE6463+2188387]
+	Ordinal0 [0x00F7E461+1762401]
+	Ordinal0 [0x00E93D78+802168]
+	Ordinal0 [0x00E80C8A+724106]
+	Ordinal0 [0x00E801DB+721371]
+	Ordinal0 [0x00E86434+746548]
+	Ordinal0 [0x00E86955+747861]
+	Ordinal0 [0x00E8673F+747327]
+	Ordinal0 [0x00E85D3F+744767]
+	Ordinal0 [0x00E84C28+740392]
+	Ordinal0 [0x00E85228+741928]
+	Ordinal0 [0x00E8EF2F+782127]
+	Ordinal0 [0x00E99FBB+827323]
+	Ordinal0 [0x00E9D310+840464]
+	Ordinal0 [0x00E854F6+742646]
+	Ordinal0 [0x00E99BF3+826355]
+	Ordinal0 [0x00EECF6D+1167213]
+	Ordinal0 [0x00EDC5F6+1099254]
+	Ordinal0 [0x00EB6BE0+945120]
+	Ordinal0 [0x00EB7AD6+948950]
+	GetHandleVerifier [0x012871F2+2712546]
+	GetHandleVerifier [0x0127886D+2652765]
+	GetHandleVerifier [0x0107002A+520730]
+	GetHandleVerifier [0x0106EE06+516086]
+	Ordinal0 [0x00F8468B+1787531]
+	Ordinal0 [0x00F88E88+1805960]
+	Ordinal0 [0x00F88F75+1806197]
+	Ordinal0 [0x00F91DF1+1842673]
+	BaseThreadInitThunk [0x7720FA29+25]
+	RtlGetAppContainerNamedObjectPath [0x77697A9E+286]
+	RtlGetAppContainerNamedObjectPath [0x77697A6E+238]
+
+Error Type : <class 'selenium.common.exceptions.WebDriverException'>
+Error Line No : 95
+Error Line Text : 'browser.get(link)')
 ========================================================================
