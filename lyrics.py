@@ -19,7 +19,7 @@ class LyricsThings:
         self.valid_message4 = "\n *** Some Errors Found Please Give It Back To Maintenance *** \n"
         self.input_text = ""
         self.browser = driver_setup()
-
+    
     def startup(self):
 
         for count, link in enumerate(self.list_of_language):

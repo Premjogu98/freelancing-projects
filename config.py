@@ -15,7 +15,7 @@ def driver_setup():
     options.add_argument('--disable-gpu')
     options.add_argument('--headless')
     options.add_argument("--window-size=1920,1080")
-
+    
     # try:
     #     browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=options)
     #     browser.maximize_window()

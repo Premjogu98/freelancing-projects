@@ -16,6 +16,7 @@ Error File : .\lyrics.py
 Error Fun Name : main
 Error : name 'browsers' is not defined
 Error Type : <class 'NameError'>
+
 Error Line No : 52
 Error Line Text : 'for link in browsers.find_elements_by_xpath('//div[@class="posts-wrapper"]/article/div/div/h2/a'):')
 ================================================================================================================================================
