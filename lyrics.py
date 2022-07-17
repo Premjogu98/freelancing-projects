@@ -52,6 +52,7 @@ class LyricsThings:
                     lyrics_links.append(link.get_attribute('href'))
                     
                 next_page_found = False
+                
 
                 for next_page in browser.find_elements_by_xpath('//a[@class="next page-numbers"]'):
                     browser.get(next_page.get_attribute("href"))

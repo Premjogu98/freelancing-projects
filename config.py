@@ -21,6 +21,7 @@ def driver_setup():
     #     browser.maximize_window()
     #     return browser
     # except Exception as e:
+    
     #     print(e)
     try:
         browser = webdriver.Chrome(executable_path=r'chromedriver.exe',options=options)

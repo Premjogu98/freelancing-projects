@@ -26,6 +26,7 @@ Error File : .\lyrics.py
 Error Fun Name : main
 Error : 'WebDriver' object has no attribute 'find_elements_by_xpath'
 Error Type : <class 'AttributeError'>
+
 Error Line No : 52
 Error Line Text : 'for link in browser.find_elements_by_xpath('//div[@class="posts-wrapper"]/article/div/div/h2/a'):')
 ========================================================================
