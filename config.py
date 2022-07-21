@@ -1,3 +1,7 @@
+def warn(*args, **kwargs):
+    pass
+import warnings
+warnings.warn = warn
 import sys
 import time
 from selenium import webdriver

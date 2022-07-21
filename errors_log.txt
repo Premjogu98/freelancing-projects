@@ -944,4 +944,14 @@ Backtrace:
 Error Type : <class 'selenium.common.exceptions.WebDriverException'>
 Error Line No : 148
 Error Line Text : 'for get_title in browser.find_elements_by_xpath('//h1[@class="title entry-title"]'):')
+================================================================================================================================================
+ERROR AAYA HAI
+DateTime : 21/07/2022 13:59:54
+Error Came From : lyrics.py.py
+Error File : lyrics.py
+Error Fun Name : scrap_data
+Error : local variable 'row' referenced before assignment
+Error Type : <class 'UnboundLocalError'>
+Error Line No : 198
+Error Line Text : 'row += 1')
 ========================================================================

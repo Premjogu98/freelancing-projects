@@ -37,4 +37,4 @@ exe = EXE(pyz,
           disable_windowed_traceback=False,
           target_arch=None,
           codesign_identity=None,
-          entitlements_file=None , icon='D:\\freelancing project\\lyrics project\\music.ico')
+          entitlements_file=None , icon='music.ico')

@@ -1,7 +1,11 @@
+def warn(*args, **kwargs):
+    pass
+import warnings
+warnings.warn = warn
 import time
 from config import driver_setup , error_log
 import re,os
-import xlsxwriter
+import csv
 from datetime import datetime
 import wx
 app = wx.App()
@@ -22,7 +26,7 @@ class LyricsThings:
         self.error_message2 = "\n *** Please Enter Number Without Any Letters or Special Character  *** \n"
         self.error_message3 = "\n *** Chromedriver Error Found Please Read REDME FILE For Configuration *** \n"
         self.error_message4 = "\n *** Some Errors Found Please Give It Back To Maintenance *** \n"
-        self.error_message5 = "\n *** Please Close Opened XLSX Sheet An Try It Again OR Restart Application *** \n"
+        self.error_message5 = "\n *** Please Close Opened CSV Sheet An Try It Again OR Restart Application *** \n"
         self.error_message6 = "\n *** Taking Longer Time To Load URL Please Restart Application *** \n"
         self.input_text = ""
         self.browser = driver_setup()
@@ -105,118 +109,114 @@ class LyricsThings:
         return lyrics_links, browser
                 
     def scrap_data(self, browser, links):
-        try:
-            date = datetime.now().strftime("%Y-%m-%d-%H.%M")
-            filename = f"./{date} {self.category} Data.xlsx"
-            workbook = xlsxwriter.Workbook(filename)
-            worksheet = workbook.add_worksheet(datetime.now().strftime("Time %H-%M-%S"))
+        
+        date = datetime.now().strftime("%Y-%m-%d-%H.%M")
+        filename = f"./{date} {self.category} Data.csv"
+        with open(filename, mode='w',newline='',encoding='utf-8') as csv_file:
+            writer = csv.DictWriter(csv_file, fieldnames=self.headers)
+            writer.writeheader()
 
-            for col,header in enumerate(self.headers):
-                worksheet.write(0,col, header)
-        except Exception as e:
-            error_log(e)
-            self.sent_error_message(self.error_message5)
-
-        row = 2
-        done = 0
-        load_error = 0
-        error_links = []
-        for link in links:
-            print("="*132)
-            print(f"Loading URL ... {link} ")
-            title = ""
-            publish_date = ""
-            song_details = ""
-            actual_lyrics = ""
-            main_error = 0
-            while True:
-                try:
-                    error = 0
-                    while True:
-                        try:
-                            browser.get(link)
-                            time.sleep(3)
-                            break
-                        except Exception as e:
-                            if error == 4:
-                                error_log(e)
-                                # self.sent_error_message(self.error_message6)
-                            else:
-                                print(f"Retrying ... {link} ")
+            done = 0
+            load_error = 0
+            non_english = 0
+            error_links = []
+            for link in links:
+                print("="*100)
+                print(f"Loading URL ... {link} ")
+                title = ""
+                publish_date = ""
+                song_details = ""
+                actual_lyrics = ""
+                main_error = 0
+                while True:
+                    try:
+                        error = 0
+                        while True:
+                            try:
+                                browser.get(link)
                                 time.sleep(3)
-                                error += 1
-                    
-                    for get_title in browser.find_elements_by_xpath('//h1[@class="title entry-title"]'):
-                        title = get_title.get_attribute('innerText').replace(" | ",", ").replace("|",", ").replace(" & ",", ").replace("&",", ").strip()
-                        break
-                    # print("Title: ",title)
-                    
-                    for get_date in browser.find_elements_by_xpath('//time[@class="entry-date published"]'):
-                        publish_date = get_date.get_attribute('innerText').strip()
-                        break
-                    # print("Date: ",publish_date)
-
-                    
-                    for contain_data in browser.find_elements_by_xpath('//div[@class="nv-content-wrap entry-content"]/p'):
-                        data = contain_data.get_attribute("innerText").lower().strip()
-
-                        if (data.__contains__('song –') == True and data.__contains__("singer –") == True) \
-                            or (data.__contains__('song: ') == True and data.__contains__("singer: ") == True)\
-                            or (data.__contains__('song –') == True and data.__contains__("singers –") == True)\
-                            or (data.__contains__('song: ') == True and data.__contains__("singer: ") == True):
-                            song_details = data.lower()
+                                break
+                            except Exception as e:
+                                if error == 4:
+                                    error_log(e)
+                                    # self.sent_error_message(self.error_message6)
+                                else:
+                                    print(f"Retrying ... {link} ")
+                                    time.sleep(3)
+                                    error += 1
+                        
+                        for get_title in browser.find_elements_by_xpath('//h1[@class="title entry-title"]'):
+                            title = get_title.get_attribute('innerText').replace(" | ",", ").replace("|",", ").replace(" & ",", ").replace("&",", ").strip()
                             break
-                        else:pass
-                    # print("song_details: ",song_details)
-                    lyrics_type = ""
-                    lyrics_path = ["h2","h3"]
-                    for path in lyrics_path:
-                        for lyrics_type in browser.find_elements_by_xpath(f'//div[@class="nv-content-wrap entry-content"]/{path}'):
-                            lyrics_type = lyrics_type.get_attribute("innerText").strip()
+                        # print("Title: ",title)
+                        
+                        for get_date in browser.find_elements_by_xpath('//time[@class="entry-date published"]'):
+                            publish_date = get_date.get_attribute('innerText').strip()
+                            break
+                        # print("Date: ",publish_date)
+
+                        
+                        for contain_data in browser.find_elements_by_xpath('//div[@class="nv-content-wrap entry-content"]/p'):
+                            data = contain_data.get_attribute("innerText").lower().strip()
+
+                            if (data.__contains__('song –') == True and data.__contains__("singer –") == True) \
+                                or (data.__contains__('song: ') == True and data.__contains__("singer: ") == True)\
+                                or (data.__contains__('song –') == True and data.__contains__("singers –") == True)\
+                                or (data.__contains__('song: ') == True and data.__contains__("singer: ") == True):
+                                song_details = data.lower()
+                                break
+                            else:pass
+                        # print("song_details: ",song_details)
+                        lyrics_type = ""
+                        lyrics_path = ["h2","h3"]
+                        for path in lyrics_path:
+                            for lyrics_type in browser.find_elements_by_xpath(f'//div[@class="nv-content-wrap entry-content"]/{path}'):
+                                lyrics_type = lyrics_type.get_attribute("innerText").strip()
+                                if lyrics_type !="":break
+                                # print(lyrics_type)
+                                
                             if lyrics_type !="":break
-                            # print(lyrics_type)
-                            
-                        if lyrics_type !="":break
 
-                    # print("lyrics_type: ",lyrics_type)
-                    
-                    for lyrics in browser.find_elements_by_xpath("//p[contains(@style,'text-align: center;')]"):
-                        actual_lyrics += lyrics.get_attribute("innerText").replace("\n","<BR>").strip()
-                    # print("Lyrics: ",actual_lyrics)
+                        # print("lyrics_type: ",lyrics_type)
+                        
+                        for lyrics in browser.find_elements_by_xpath("//p[contains(@style,'text-align: center;')]"):
+                            actual_lyrics += lyrics.get_attribute("innerText").replace("\n","<BR>").strip()
+                        # print("Lyrics: ",actual_lyrics)
 
-                    updated_song_details = song_details.replace('\n','<BR>')
-                    data = re.findall(r"(?<=–).*?(?=<BR>)", updated_song_details)
-                    # print("data: ",data)
-                    if len(data) == 0:data = re.findall(r"(?<=:).*?(?=<BR>)", updated_song_details)
-                    updated_actual_lyrics = f"{lyrics_type}<BR><BR><BR>{actual_lyrics}<BR><BR><BR><BR>{self.remove_multi_space(updated_song_details)}"
-                    updated_tag = f"{lyrics_type}"
-                    for song_tag in data:
-                        updated_tag += f",{song_tag.strip()}"
-                        # print("updated_tag: ",updated_tag)
-                    worksheet.write(row, 0, publish_date)
-                    worksheet.write(row, 1, title)
-                    worksheet.write(row, 2, self.category)
-                    worksheet.write(row, 3, updated_actual_lyrics)
-                    worksheet.write(row, 4, updated_tag.replace(', ',','))
-
-                    row += 1
-                    done += 1
-                    # print(f"\n{'='*80}\n{publish_date}\n{title}\n{self.category}\n{updated_actual_lyrics}\n{updated_tag}\n{'='*80}\n")
-                    break
-                except Exception as e:
-                    if main_error == 4:
-                        error_log(e)
-                        load_error += 1
-                        error_links.append(link)
+                        updated_song_details = song_details.replace('\n','<BR>')
+                        data = re.findall(r"(?<=–).*?(?=<BR>)", updated_song_details)
+                        # print("data: ",data)
+                        if len(data) == 0:data = re.findall(r"(?<=:).*?(?=<BR>)", updated_song_details)
+                        updated_actual_lyrics = f"{lyrics_type}<BR><BR><BR>{actual_lyrics}<BR><BR><BR><BR>{self.remove_multi_space(updated_song_details)}"
+                        updated_tag = f"{lyrics_type}"
+                        for song_tag in data:
+                            updated_tag += f",{song_tag.strip()}"
+                            # print("updated_tag: ",updated_tag)
+                        if re.match("^[\W A-Za-z0-9_@?./#&+-]*$", updated_actual_lyrics) or "<BR><BR><BR><BR><BR><BR><BR>" not in updated_actual_lyrics:
+                            detail_dic = {
+                                self.headers[0] : publish_date,
+                                self.headers[1] : title,
+                                self.headers[2] : self.category,
+                                self.headers[3] : updated_actual_lyrics,
+                                self.headers[4] : updated_tag.replace(', ',',')
+                            }
+                            writer.writerow(detail_dic)
+                        else:
+                            non_english += 1
+                        done += 1
                         break
-                    else:
-                        time.sleep(3)
-                        print(f"Retrying ... {link} ")
-                        main_error += 1
-            print(f"*** Total URL: {str(len(links))} Done: {str(done)} Failed To Load: {str(load_error)} ***")
-            print("*** WARNING : PLEASE DON'T CLOSE APPLICATION UNTIL ALL PROCESS DONE (Data wiil be save after all links mined successfully done) ***")
-        workbook.close()
-        browser.close()
+                    except Exception as e:
+                        if main_error == 4:
+                            error_log(e)
+                            load_error += 1
+                            error_links.append(link)
+                            break
+                        else:
+                            time.sleep(3)
+                            print(f"Retrying ... {link} ")
+                            main_error += 1
+                print(f"***  Total URL: {str(len(links))} Done: {str(done)} Failed To Load: {str(load_error)} Non English Links: {str(non_english)}  ***")
+        
         for count, i in enumerate(error_links):
             print(f"Failed To Load (LINKS No. {str(count)}): {i}")
         
