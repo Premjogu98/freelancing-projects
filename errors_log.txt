@@ -954,4 +954,184 @@ Error : local variable 'row' referenced before assignment
 Error Type : <class 'UnboundLocalError'>
 Error Line No : 198
 Error Line Text : 'row += 1')
+================================================================================================================================================
+ERROR AAYA HAI
+DateTime : 24/07/2022 20:27:00
+Error Came From : lyrics.py.py
+Error File : .\lyrics_agurchand_com.py
+Error Fun Name : scrap_data
+Error : replace() takes at least 2 arguments (1 given)
+Error Type : <class 'TypeError'>
+Error Line No : 165
+Error Line Text : 'song_details += detail.replace("</strong>")+"<BR>"')
+================================================================================================================================================
+ERROR AAYA HAI
+DateTime : 24/07/2022 20:27:00
+Error Came From : lyrics.py.py
+Error File : .\lyrics_agurchand_com.py
+Error Fun Name : scrap_data
+Error : local variable 'lyrics_type' referenced before assignment
+Error Type : <class 'UnboundLocalError'>
+Error Line No : 174
+Error Line Text : 'print("lyrics_type: ",lyrics_type)')
+================================================================================================================================================
+ERROR AAYA HAI
+DateTime : 24/07/2022 20:27:00
+Error Came From : lyrics.py.py
+Error File : .\lyrics_agurchand_com.py
+Error Fun Name : scrap_data
+Error : replace() takes at least 2 arguments (1 given)
+Error Type : <class 'TypeError'>
+Error Line No : 165
+Error Line Text : 'song_details += detail.replace("</strong>")+"<BR>"')
+================================================================================================================================================
+ERROR AAYA HAI
+DateTime : 24/07/2022 20:45:30
+Error Came From : lyrics.py.py
+Error File : .\lyrics_agurchand_com.py
+Error Fun Name : scrap_data
+Error : local variable 'updated_tag' referenced before assignment
+Error Type : <class 'UnboundLocalError'>
+Error Line No : 186
+Error Line Text : 'print("updated_tag: ",updated_tag)')
+================================================================================================================================================
+ERROR AAYA HAI
+DateTime : 24/07/2022 20:45:30
+Error Came From : lyrics.py.py
+Error File : .\lyrics_agurchand_com.py
+Error Fun Name : scrap_data
+Error : local variable 'updated_tag' referenced before assignment
+Error Type : <class 'UnboundLocalError'>
+Error Line No : 186
+Error Line Text : 'print("updated_tag: ",updated_tag)')
+================================================================================================================================================
+ERROR AAYA HAI
+DateTime : 24/07/2022 20:45:30
+Error Came From : lyrics.py.py
+Error File : .\lyrics_agurchand_com.py
+Error Fun Name : scrap_data
+Error : local variable 'updated_tag' referenced before assignment
+Error Type : <class 'UnboundLocalError'>
+Error Line No : 186
+Error Line Text : 'print("updated_tag: ",updated_tag)')
+================================================================================================================================================
+ERROR AAYA HAI
+DateTime : 24/07/2022 20:45:35
+Error Came From : lyrics.py.py
+Error File : .\lyrics_agurchand_com.py
+Error Fun Name : scrap_data
+Error : local variable 'updated_tag' referenced before assignment
+Error Type : <class 'UnboundLocalError'>
+Error Line No : 186
+Error Line Text : 'print("updated_tag: ",updated_tag)')
+================================================================================================================================================
+ERROR AAYA HAI
+DateTime : 24/07/2022 20:45:35
+Error Came From : lyrics.py.py
+Error File : .\lyrics_agurchand_com.py
+Error Fun Name : scrap_data
+Error : local variable 'updated_tag' referenced before assignment
+Error Type : <class 'UnboundLocalError'>
+Error Line No : 186
+Error Line Text : 'print("updated_tag: ",updated_tag)')
+================================================================================================================================================
+ERROR AAYA HAI
+DateTime : 24/07/2022 20:45:35
+Error Came From : lyrics.py.py
+Error File : .\lyrics_agurchand_com.py
+Error Fun Name : scrap_data
+Error : local variable 'updated_tag' referenced before assignment
+Error Type : <class 'UnboundLocalError'>
+Error Line No : 186
+Error Line Text : 'print("updated_tag: ",updated_tag)')
+================================================================================================================================================
+ERROR AAYA HAI
+DateTime : 24/07/2022 20:45:40
+Error Came From : lyrics.py.py
+Error File : .\lyrics_agurchand_com.py
+Error Fun Name : scrap_data
+Error : local variable 'updated_tag' referenced before assignment
+Error Type : <class 'UnboundLocalError'>
+Error Line No : 186
+Error Line Text : 'print("updated_tag: ",updated_tag)')
+================================================================================================================================================
+ERROR AAYA HAI
+DateTime : 24/07/2022 20:45:40
+Error Came From : lyrics.py.py
+Error File : .\lyrics_agurchand_com.py
+Error Fun Name : scrap_data
+Error : local variable 'updated_tag' referenced before assignment
+Error Type : <class 'UnboundLocalError'>
+Error Line No : 186
+Error Line Text : 'print("updated_tag: ",updated_tag)')
+================================================================================================================================================
+ERROR AAYA HAI
+DateTime : 24/07/2022 20:45:41
+Error Came From : lyrics.py.py
+Error File : .\lyrics_agurchand_com.py
+Error Fun Name : scrap_data
+Error : local variable 'updated_tag' referenced before assignment
+Error Type : <class 'UnboundLocalError'>
+Error Line No : 186
+Error Line Text : 'print("updated_tag: ",updated_tag)')
+================================================================================================================================================
+ERROR AAYA HAI
+DateTime : 24/07/2022 20:45:46
+Error Came From : lyrics.py.py
+Error File : .\lyrics_agurchand_com.py
+Error Fun Name : scrap_data
+Error : local variable 'updated_tag' referenced before assignment
+Error Type : <class 'UnboundLocalError'>
+Error Line No : 186
+Error Line Text : 'print("updated_tag: ",updated_tag)')
+================================================================================================================================================
+ERROR AAYA HAI
+DateTime : 24/07/2022 20:45:46
+Error Came From : lyrics.py.py
+Error File : .\lyrics_agurchand_com.py
+Error Fun Name : scrap_data
+Error : local variable 'updated_tag' referenced before assignment
+Error Type : <class 'UnboundLocalError'>
+Error Line No : 186
+Error Line Text : 'print("updated_tag: ",updated_tag)')
+================================================================================================================================================
+ERROR AAYA HAI
+DateTime : 24/07/2022 20:45:46
+Error Came From : lyrics.py.py
+Error File : .\lyrics_agurchand_com.py
+Error Fun Name : scrap_data
+Error : local variable 'updated_tag' referenced before assignment
+Error Type : <class 'UnboundLocalError'>
+Error Line No : 186
+Error Line Text : 'print("updated_tag: ",updated_tag)')
+================================================================================================================================================
+ERROR AAYA HAI
+DateTime : 24/07/2022 20:45:51
+Error Came From : lyrics.py.py
+Error File : .\lyrics_agurchand_com.py
+Error Fun Name : scrap_data
+Error : local variable 'updated_tag' referenced before assignment
+Error Type : <class 'UnboundLocalError'>
+Error Line No : 186
+Error Line Text : 'print("updated_tag: ",updated_tag)')
+================================================================================================================================================
+ERROR AAYA HAI
+DateTime : 24/07/2022 20:45:51
+Error Came From : lyrics.py.py
+Error File : .\lyrics_agurchand_com.py
+Error Fun Name : scrap_data
+Error : local variable 'updated_tag' referenced before assignment
+Error Type : <class 'UnboundLocalError'>
+Error Line No : 186
+Error Line Text : 'print("updated_tag: ",updated_tag)')
+================================================================================================================================================
+ERROR AAYA HAI
+DateTime : 24/07/2022 20:45:52
+Error Came From : lyrics.py.py
+Error File : .\lyrics_agurchand_com.py
+Error Fun Name : scrap_data
+Error : local variable 'updated_tag' referenced before assignment
+Error Type : <class 'UnboundLocalError'>
+Error Line No : 186
+Error Line Text : 'print("updated_tag: ",updated_tag)')
 ========================================================================
