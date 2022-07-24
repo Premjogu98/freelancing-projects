@@ -1,5 +1,6 @@
 def warn(*args, **kwargs):
     pass
+import sys
 import warnings
 warnings.warn = warn
 import time
@@ -121,7 +122,6 @@ class LyricsThings:
 
             done = 0
             load_error = 0
-            error_links = []
             next_page_found = True
             while next_page_found == True:
                 print("="*100)
@@ -156,21 +156,21 @@ class LyricsThings:
                             
                         for contain_data in browser.find_elements_by_xpath(f'//*[@id="contentwrap"]/div[1]/div[{str(div_count)}]/div[2]/p'):
                             data = re.sub('\s+', ' ', contain_data.get_attribute("outerHTML").lower().strip())
+                            if (data.__contains__("</a>")) != True or (data.__contains__('<img')) == True:
+                                if (data.__contains__('music')) == True or (data.__contains__("lyrics"))\
+                                    or (data.__contains__('lyricist')) or (data.__contains__("film"))\
+                                    or (data.__contains__('singer')) or (data.__contains__("music director")) or (data.__contains__("singer(s)"))\
+                                    or (data.__contains__("song")):
+                                # if data == ("lyrics:" or "music:" or 'lyricist:' or "film:" or 'singer:' or "music director" or "singer(s)" or "song:"):
+                                    song_details_list = re.findall(r"(?<=<strong>).*?(?=<br>)", data)
+                                    if len(song_details_list) == 0:
+                                        song_details_list = data.split("<br>")
+                                    for detail in song_details_list:
+                                        song_details += detail.replace("</strong>",'').replace(", ",',').replace(": ",':').replace(" :",': ')+"<BR>"
+                                        tags += detail.replace("</strong>",'').replace(", ",'').partition(":")[2].strip()+","
+                                    break
 
-                            if (data.__contains__('music')) == True or (data.__contains__("lyrics"))\
-                                or (data.__contains__('lyricist')) or (data.__contains__("film"))\
-                                or (data.__contains__('singer')) or (data.__contains__("music director")) or (data.__contains__("singer(s)"))\
-                                or (data.__contains__("song")):
-                            # if data == ("lyrics:" or "music:" or 'lyricist:' or "film:" or 'singer:' or "music director" or "singer(s)" or "song:"):
-                                song_details_list = re.findall(r"(?<=<strong>).*?(?=<br>)", data)
-                                if len(song_details_list) == 0:
-                                    song_details_list = data.split("<br>")
-                                for detail in song_details_list:
-                                    song_details += detail.replace("</strong>",'').replace(", ",',').replace(": ",':').replace(" :",': ')+"<BR>"
-                                    tags += detail.replace("</strong>",'').replace(", ",'').partition(":")[2].strip()+","
-                                break
-
-                        print("song_details: ",song_details)
+                        # print("song_details: ",song_details)
                         if title.__contains__('–') == True:
                             lyrics_type = title.partition("–")[0].strip()
 
@@ -218,17 +218,13 @@ class LyricsThings:
                     except Exception as e:
                         error_log(e)
                         next_page_found = True
-                            
-                
-        
-        for count, i in enumerate(error_links):
-            print(f"Failed To Load (LINKS No. {str(count)}): {i}")
-        
+        return 
 lyricsthings = LyricsThings()
 browser = lyricsthings.startup()
 links, browser = lyricsthings.fetch_links(browser)
-result = lyricsthings.scrap_data(browser,links)
+lyricsthings.scrap_data(browser,links)
 
 wx.MessageBox("Data Mining Successfully Done", 'Success', wx.OK | wx.ICON_INFORMATION)
 input('Please Enter To Exit')
-quit()
+import sys
+sys.exit("Thank You ")
