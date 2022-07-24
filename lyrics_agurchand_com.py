@@ -23,7 +23,8 @@ class LyricsThings:
             "https://lyrics.agurchand.com/category/malayalam-lyrics/",
             "https://lyrics.agurchand.com/category/tamil-lyrics/",
             "https://lyrics.agurchand.com/category/tamil-lyrics/old-tamil-lyrics/",
-            "https://lyrics.agurchand.com/category/telugu-lyrics/"
+            "https://lyrics.agurchand.com/category/telugu-lyrics/",
+            "https://lyrics.agurchand.com/category/telugu-lyrics/page/21/"
         ]
         self.regex = re.compile('[a-zA-Z@_!#$%^&*()<>?/\|}{~:]')
         self.error_message1 = "\n *** Please Enter Valid Number *** \n"
@@ -156,21 +157,21 @@ class LyricsThings:
                             
                         for contain_data in browser.find_elements_by_xpath(f'//*[@id="contentwrap"]/div[1]/div[{str(div_count)}]/div[2]/p'):
                             data = re.sub('\s+', ' ', contain_data.get_attribute("outerHTML").lower().strip())
-                            if (data.__contains__("</a>")) != True or (data.__contains__('<img')) == True:
-                                if (data.__contains__('music')) == True or (data.__contains__("lyrics"))\
+                            if ("<img" not in data):
+                                if (data.__contains__('music')) or (data.__contains__("lyrics"))\
                                     or (data.__contains__('lyricist')) or (data.__contains__("film"))\
                                     or (data.__contains__('singer')) or (data.__contains__("music director")) or (data.__contains__("singer(s)"))\
-                                    or (data.__contains__("song")):
-                                # if data == ("lyrics:" or "music:" or 'lyricist:' or "film:" or 'singer:' or "music director" or "singer(s)" or "song:"):
-                                    song_details_list = re.findall(r"(?<=<strong>).*?(?=<br>)", data)
-                                    if len(song_details_list) == 0:
-                                        song_details_list = data.split("<br>")
-                                    for detail in song_details_list:
-                                        song_details += detail.replace("</strong>",'').replace(", ",',').replace(": ",':').replace(" :",': ')+"<BR>"
-                                        tags += detail.replace("</strong>",'').replace(", ",'').partition(":")[2].strip()+","
+                                    or (data.__contains__("song")) or (data.__contains__("movie")):
+                                    if ":" in data:
+                                        song_details_list = re.findall(r"(?<=<strong>).*?(?=<br>)", data)
+                                        if len(song_details_list) == 0:
+                                            song_details_list = data.split("<br>")
+                                        for detail in song_details_list:
+                                            song_details += self.remove_html_text(detail).replace("</strong>",'').replace(", ",',').replace("<p>",'').replace("<p>",'').replace(": ",':').replace(" :",': ').replace("&nbsp;",'')+"<BR>"
+                                            tags += detail.replace("</strong>",'').replace(", ",'').replace("&nbsp;",'').partition(":")[2].strip()+","
                                     break
-
-                        # print("song_details: ",song_details)
+                        song_details = re.sub('\s+', ' ', song_details)
+                        print("\nsong_details: ",song_details)
                         if title.__contains__('–') == True:
                             lyrics_type = title.partition("–")[0].strip()
 
@@ -228,3 +229,4 @@ wx.MessageBox("Data Mining Successfully Done", 'Success', wx.OK | wx.ICON_INFORM
 input('Please Enter To Exit')
 import sys
 sys.exit("Thank You ")
+exit(0)
