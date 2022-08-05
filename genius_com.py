@@ -13,25 +13,25 @@ import wx
 app = wx.App()
 class LyricsThings:
     def __init__(self) -> None:
-        self.load_more = '//div[@class="PageGridCenter-q0ues6-0 Charts__LoadMore-sc-1re0f44-1 eDwRUT"]/div'
-        self.click_filter = '//div[@class="SquareSelectTitle__Container-sc-1vck5yn-0 euenQK"]'
+        self.load_more = '//div[contains(@class,"Charts__LoadMore")]/div'
+        self.click_filter = '//div[starts-with(@class,"SquareSelectTitle__Container")]'
 
-        self.songs = '//div[@class="SquareManySelects__Selects-sc-1kktot3-4 hnIVtc"]/div[1]/div[2]/div[1]'
-        self.songs_day = '//div[@class="SquareManySelects__Selects-sc-1kktot3-4 hnIVtc"]/div[3]/div[2]/div[1]'
-        self.songs_week = '//div[@class="SquareManySelects__Selects-sc-1kktot3-4 hnIVtc"]/div[3]/div[3]/div[1]'
-        self.songs_month = '//div[@class="SquareManySelects__Selects-sc-1kktot3-4 hnIVtc"]/div[3]/div[4]/div[1]'
-        self.songs_alltime = '//div[@class="SquareManySelects__Selects-sc-1kktot3-4 hnIVtc"]/div[3]/div[5]/div[1]'
+        self.songs = '//div[starts-with(@class,"SquareManySelects__Selects")]/div[1]/div[2]/div[1]'
+        self.songs_day = '//div[starts-with(@class,"SquareManySelects__Selects")]/div[3]/div[2]/div[1]'
+        self.songs_week = '//div[starts-with(@class,"SquareManySelects__Selects")]/div[3]/div[3]/div[1]'
+        self.songs_month = '//div[starts-with(@class,"SquareManySelects__Selects")]/div[3]/div[4]/div[1]'
+        self.songs_alltime = '//div[starts-with(@class,"SquareManySelects__Selects")]/div[3]/div[5]/div[1]'
 
-        self.albums = '//div[@class="SquareManySelects__Selects-sc-1kktot3-4 hnIVtc"]/div[1]/div[3]/div[1]'
-        self.albums_day = '//div[@class="SquareManySelects__Selects-sc-1kktot3-4 hnIVtc"]/div[2]/div[2]/div[1]'
-        self.albums_week = '//div[@class="SquareManySelects__Selects-sc-1kktot3-4 hnIVtc"]/div[2]/div[3]/div[1]'
-        self.albums_month = '//div[@class="SquareManySelects__Selects-sc-1kktot3-4 hnIVtc"]/div[2]/div[4]/div[1]'
-        self.albums_alltime = '//div[@class="SquareManySelects__Selects-sc-1kktot3-4 hnIVtc"]/div[2]/div[5]/div[1]'
+        self.albums = '//div[starts-with(@class,"SquareManySelects__Selects")]/div[1]/div[3]/div[1]'
+        self.albums_day = '//div[starts-with(@class,"SquareManySelects__Selects")]/div[2]/div[2]/div[1]'
+        self.albums_week = '//div[starts-with(@class,"SquareManySelects__Selects")]/div[2]/div[3]/div[1]'
+        self.albums_month = '//div[starts-with(@class,"SquareManySelects__Selects")]/div[2]/div[4]/div[1]'
+        self.albums_alltime = '//div[starts-with(@class,"SquareManySelects__Selects")]/div[2]/div[5]/div[1]'
 
-        self.song_info = '//div[@class="SongInfo__Columns-nekw6x-2 dWcYSx"]'
-        self.song_tags = '//div[@class="SongTags__Container-xixwg3-1 bZsZHM"]/a'
+        self.song_info = '//div[starts-with(@class,"SongInfo__Columns")]'
+        self.song_tags = '//div[starts-with(@class,"SongTags__Container")]/a'
 
-        self.lyrics = '//div[@class="Lyrics__Container-sc-1ynbvzw-6 YYrds"]'
+        self.lyrics = '//div[starts-with(@class,"Lyrics__Container")]'
 
         self.main_filter = ["songs", "Albums"]
         self.base_filter = ["Day", "Week", "Month", "All Time"]
@@ -201,16 +201,25 @@ class LyricsThings:
                                     error += 1
                         
                         title = ''
-                        for song_title in self.browser.find_elements_by_xpath('//span[@class="SongHeaderdesktop__HiddenMask-sc-1effuo1-10 kwCpxe"]'):
+                        for song_title in self.browser.find_elements_by_xpath('//span[starts-with(@class,"SongHeaderdesktop__HiddenMask")]'):
                             title = f'{song_title.get_attribute("innerText").strip().capitalize()} Lyrics'
                             break
                         # print("Title: ",title)
-
+                        
                         released_date = ''
-                        for song_date in self.browser.find_elements_by_xpath('//div[@class="HeaderMetadata__ReleaseDate-sc-1p42fnf-5 fjgCwz"]'):
-                            released_date = song_date.get_attribute("innerText").strip()
-                            break
-                        # print("Released_date: ",released_date)
+                        artist = ""
+                        for data in self.browser.find_elements_by_xpath('//div[starts-with(@class,"HeaderMetadata__Section")]'):
+                            type = data.get_attribute("innerText").strip()
+                            if "Produced by" in type:
+                                artist = re.sub('\s+', ' ', type)
+                                if "more" in artist:
+                                    artist = artist.partition(",")[0]
+                                title += f' - {artist.replace("Produced by","").replace("&",",")}'
+                                # print("artist: ",type)
+                                
+                            elif "Release Date" in type:
+                                released_date = re.sub('\s+', ' ', type).replace("Release Date","").replace("&",",")
+                                # print("Released_date: ",released_date)
 
                         info = ''
                         for song_info in self.browser.find_elements_by_xpath(self.song_info):
@@ -249,15 +258,15 @@ class LyricsThings:
                             tag += song_tag.get_attribute("innerText").strip() + ','
                         tag = tag.rstrip(',')
                         # print("Song Tag: ",tag)
-                        
-                        detail_dic = {
-                                self.headers[0] : released_date,
-                                self.headers[1] : title,
-                                self.headers[2] : "English Lyrics",
-                                self.headers[3] : lyrics.replace('©','').replace('℗','').strip(),
-                                self.headers[4] : tag
-                            }
-                        writer.writerow(detail_dic)
+                        if re.match("^[\W A-Za-z0-9_@?./#&+-]*$", lyrics+tag):
+                            detail_dic = {
+                                    self.headers[0] : released_date,
+                                    self.headers[1] : title,
+                                    self.headers[2] : "English Lyrics",
+                                    self.headers[3] : lyrics.replace('©','').replace('℗','').strip(),
+                                    self.headers[4] : tag
+                                }
+                            writer.writerow(detail_dic)
                         break
                     except Exception as e:
                         error_log(e)
@@ -327,16 +336,25 @@ class LyricsThings:
                                     error += 1
                         
                         title = ''
-                        for song_title in self.browser.find_elements_by_xpath('//span[@class="SongHeaderdesktop__HiddenMask-sc-1effuo1-10 kwCpxe"]'):
+                        for song_title in self.browser.find_elements_by_xpath('//span[starts-with(@class,"SongHeaderdesktop__HiddenMask")]'):
                             title = f'{song_title.get_attribute("innerText").strip().capitalize()} Lyrics'
                             break
                         # print("Title: ",title)
-
+                        
                         released_date = ''
-                        for song_date in self.browser.find_elements_by_xpath('//div[@class="HeaderMetadata__ReleaseDate-sc-1p42fnf-5 fjgCwz"]'):
-                            released_date = song_date.get_attribute("innerText").strip()
-                            break
-                        # print("Released_date: ",released_date)
+                        artist = ""
+                        for data in self.browser.find_elements_by_xpath('//div[starts-with(@class,"HeaderMetadata__Section")]'):
+                            type = data.get_attribute("innerText").strip()
+                            if "Produced by" in type:
+                                artist = re.sub('\s+', ' ', type)
+                                if "more" in artist:
+                                    artist = artist.partition(",")[0]
+                                title += f' - {artist.replace("Produced by","").replace("&",",")}'
+                                # print("artist: ",type)
+                                
+                            elif "Release Date" in type:
+                                released_date = re.sub('\s+', ' ', type).replace("Release Date","").replace("&",",")
+                                # print("Released_date: ",released_date)
 
                         info = ''
                         for song_info in self.browser.find_elements_by_xpath(self.song_info):
@@ -375,15 +393,15 @@ class LyricsThings:
                             tag += song_tag.get_attribute("innerText").strip() + ','
                         tag = tag.rstrip(',')
                         # print("Song Tag: ",tag)
-                        
-                        detail_dic = {
-                                self.headers[0] : released_date,
-                                self.headers[1] : title,
-                                self.headers[2] : "English Lyrics",
-                                self.headers[3] : lyrics.replace('©','').replace('℗','').strip(),
-                                self.headers[4] : tag
-                            }
-                        writer.writerow(detail_dic)
+                        if re.match("^[\W A-Za-z0-9_@?./#&+-]*$", lyrics+tag):
+                            detail_dic = {
+                                    self.headers[0] : released_date,
+                                    self.headers[1] : title,
+                                    self.headers[2] : "English Lyrics",
+                                    self.headers[3] : lyrics.replace('©','').replace('℗','').strip(),
+                                    self.headers[4] : tag
+                                }
+                            writer.writerow(detail_dic)
                         break
                     except Exception as e:
                         error_log(e)
@@ -397,3 +415,7 @@ if filter_type == "songs":
     lyricsthings.songs_scrap()
 else:
     lyricsthings.album_scrap()
+
+wx.MessageBox("Data Mining Successfully Done", 'Success', wx.OK | wx.ICON_INFORMATION)
+input('Please Enter To Exit')
+quit()
