@@ -16,9 +16,9 @@ def driver_setup():
         options.add_experimental_option("excludeSwitches",["ignore-certificate-errors",'enable-logging'])
     except:
         pass
-    options.add_argument('--disable-gpu')
-    options.add_argument('--headless')
-    options.add_argument("--window-size=1920,1080")
+    # options.add_argument('--disable-gpu')
+    # options.add_argument('--headless')
+    # options.add_argument("--window-size=1920,1080")
 
     # try:
     #     browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=options)
