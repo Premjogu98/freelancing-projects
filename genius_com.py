@@ -236,9 +236,12 @@ class LyricsThings:
                                     # print(info_list[0],":",info_list[1])
                                     del info_list[0]
                                     del info_list[0]
-                                except IndexError:
-                                    # error_log("Index Error")
+                                except Exception as e:
+                                    error_log(e)
+                                    print(link)
                                     print("Index Error")
+                                    time.sleep(5)
+                                    break
                             break
                         info = info.rstrip("<BR>")
                         # print("Song Info: ",info)
@@ -279,7 +282,6 @@ class LyricsThings:
                 total_albums = []
                 for link in self.browser.find_elements_by_xpath('//*[@id="top-songs"]/div/div[3]/a'):
                     total_albums.append(link.get_attribute("href"))
-                    break
                 break
             except Exception as e:
                 print(f"Retrying ... {link} ")
@@ -377,6 +379,7 @@ class LyricsThings:
                                     print(link)
                                     print("Index Error")
                                     time.sleep(5)
+                                    break
 
                             break
                         info = info.rstrip("<BR>")
