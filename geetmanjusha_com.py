@@ -14,7 +14,6 @@ import wx
 app = wx.App()
 from openpyxl import Workbook
 
-
 class LyricsThings:
 
     def __init__(self) -> None:
@@ -77,11 +76,11 @@ class LyricsThings:
                     html_data = re.sub(' +', ' ', link.get_attribute("outerHTML").strip())
 
                     a_tag_html = html_data.partition('<a ')[2].partition('/a>')[0]
-                    lyrics_link , lyrics_tag = html_data.partition('<a ')[2].partition('/a>')[0].partition('href="')[2].partition('"')[0].strip(), a_tag_html.partition('">')[2].partition('<')[0].strip().split("/")[0]
-                    Lyricist = str(html_data.partition('entity-excerpt')[2].partition('</div>')[0]).split("/")[1].replace(",","<BR>")
+                    lyrics_link , lyrics_tag = html_data.partition('<a ')[2].partition('/a>')[0].partition('href="')[2].partition('"')[0].strip(), re.sub(' +', ' ', a_tag_html.partition('">')[2].partition('<')[0].strip().split("/")[0].replace(",",""))
+                    Lyricist = str(html_data.partition('entity-excerpt')[2].partition('</div>')[0]).split("/")[1].capitalize().replace(",","<BR>")
                     date = str(html_data.partition('entity-meta')[2].partition('</ul>')[0]).partition('Created')[2].partition('by')[0]
 
-                    self.collected_data.append({"alpha":letter, "link":lyrics_link, "lyrics_tag":lyrics_tag.title(), "song_detail": Lyricist.capitalize(), "date":date })
+                    self.collected_data.append({"alpha":letter, "link":lyrics_link, "lyrics_tag":lyrics_tag.title(), "song_detail": Lyricist, "date":date })
                     print(f"{count} --> {self.user_selected_option} --> {letter}  {total_count} {lyrics_link}")
                     total_count += 1
                 break
@@ -97,34 +96,37 @@ class LyricsThings:
         sheet['C1'] = "Category"
         sheet['D1'] = "Lyrics"
         sheet['E1'] = "Tag"
-
+        link_count = 1
+        
         for count, data in enumerate(self.collected_data,start=3):
-            print(f"{count} Link --> {data['link']}")
+            print(f"{link_count} / {len(self.collected_data)} -- {self.user_selected_option} --> {data['link']}"),
             self.browser.get(data["link"])
             time.sleep(2)
             lyrics_html = ""
             for lyrics in self.browser.find_elements_by_xpath('//div[@class="entity-description"][2]/pre'):
                 lyrics_html = re.sub(' +', ' ', lyrics.get_attribute("outerHTML").strip().replace('<pre style="font-size:16px;">','').replace("</pre>",'').replace("\n\n","<BR>").replace("\n","<BR>"))
-                print(lyrics_html)
+                # print(lyrics_html)
 
-            tags = f'{data["lyrics_tag"]} Lyrics'
-        
+            tags = f'{data["lyrics_tag"].strip()} Lyrics,'
+
             for tags_s in self.browser.find_elements_by_xpath('//a[@class="hashtag"]'):
                 tags += tags_s.get_attribute("innerText").strip().replace("#","").title()+","
+
             for tags_s in data["song_detail"].split("<BR>"):
                 tags += tags_s.partition(":")[2].strip()+","
 
-            print(tags)
-            break
-            # sheet[f'A{count}'] = data["date"]
-            # sheet[f'B{count}'] = f'{data["lyrics_tag"]} Lyrics'
-            # sheet[f'C{count}'] = f'{self.user_selected_option} Lyrics'
-            # sheet[f'D{count}'] = f'{data["lyrics_tag"]} Lyrics<BR><BR><BR>{lyrics_html}<BR><BR><BR><BR>{data["song_detail"]}'
-            # sheet[f'E{count}'] = tags.rstrip(",")
-            
-
-
-
+            # print(tags)
+            # break
+            sheet[f'A{count}'] = data["date"]
+            sheet[f'B{count}'] = f'{data["lyrics_tag"]} Lyrics'
+            sheet[f'C{count}'] = f'{self.user_selected_option} Lyrics'
+            sheet[f'D{count}'] = f'{data["lyrics_tag"]} Lyrics<BR><BR><BR>{lyrics_html}<BR><BR><BR><BR>{data["song_detail"]}'
+            sheet[f'E{count}'] = tags.rstrip(",")
+            link_count += 1
+        date = datetime.now().strftime("%Y-%m-%d-%H.%M")
+        filename = f"./{date} {self.user_selected_option} Data.xlsx"
+        book.save(filename)
+        self.browser.close()
 lyricsthings = LyricsThings()
 lyricsthings.user_input()
 lyricsthings.links_scrap()
