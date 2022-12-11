@@ -4,15 +4,15 @@ import sys
 import warnings
 warnings.warn = warn
 import time
-from config import driver_setup , error_log
+from config import driver_setup
 import re
 import os
 import csv
 from datetime import datetime
 import string 
 import wx
+from csv_to_xlsx import csv_to_xlsx
 app = wx.App()
-from openpyxl import Workbook
 
 class LyricsThings:
 
@@ -83,51 +83,64 @@ class LyricsThings:
                     self.collected_data.append({"alpha":letter, "link":lyrics_link, "lyrics_tag":lyrics_tag.title(), "song_detail": Lyricist, "date":date })
                     print(f"{count} --> {self.user_selected_option} --> {letter}  {total_count} {lyrics_link}")
                     total_count += 1
-                break
             else:
                 print("No Lyrics Found")
 
     def songs_scrap(self):
-        book = Workbook()
-        sheet = book.active
-
-        sheet['A1'] = "Date"
-        sheet['B1'] = "Title"
-        sheet['C1'] = "Category"
-        sheet['D1'] = "Lyrics"
-        sheet['E1'] = "Tag"
-        link_count = 1
-        
-        for count, data in enumerate(self.collected_data,start=3):
-            print(f"{link_count} / {len(self.collected_data)} -- {self.user_selected_option} --> {data['link']}"),
-            self.browser.get(data["link"])
-            time.sleep(2)
-            lyrics_html = ""
-            for lyrics in self.browser.find_elements_by_xpath('//div[@class="entity-description"][2]/pre'):
-                lyrics_html = re.sub(' +', ' ', lyrics.get_attribute("outerHTML").strip().replace('<pre style="font-size:16px;">','').replace("</pre>",'').replace("\n\n","<BR>").replace("\n","<BR>"))
-                # print(lyrics_html)
-
-            tags = f'{data["lyrics_tag"].strip()} Lyrics,'
-
-            for tags_s in self.browser.find_elements_by_xpath('//a[@class="hashtag"]'):
-                tags += tags_s.get_attribute("innerText").strip().replace("#","").title()+","
-
-            for tags_s in data["song_detail"].split("<BR>"):
-                tags += tags_s.partition(":")[2].strip()+","
-
-            # print(tags)
-            # break
-            sheet[f'A{count}'] = data["date"]
-            sheet[f'B{count}'] = f'{data["lyrics_tag"]} Lyrics'
-            sheet[f'C{count}'] = f'{self.user_selected_option} Lyrics'
-            sheet[f'D{count}'] = f'{data["lyrics_tag"]} Lyrics<BR><BR><BR>{lyrics_html}<BR><BR><BR><BR>{data["song_detail"]}'
-            sheet[f'E{count}'] = tags.rstrip(",")
-            link_count += 1
         date = datetime.now().strftime("%Y-%m-%d-%H.%M")
-        filename = f"./{date} {self.user_selected_option} Data.xlsx"
-        book.save(filename)
+        filename = f"./{date} {self.user_selected_option} Data.csv"
+        with open(filename, mode='w',newline='',encoding='utf-8') as csv_file:
+            writer = csv.DictWriter(csv_file, fieldnames=self.headers)
+            writer.writeheader()
+
+            link_count = 1
+            
+            for count, data in enumerate(self.collected_data,start=3):
+                print(f"{link_count} / {len(self.collected_data)} -- {self.user_selected_option} --> {data['link']}"),
+                self.browser.get(data["link"])
+                time.sleep(2)
+                lyrics_html = ""
+                for lyrics in self.browser.find_elements_by_xpath('//div[@class="entity-description"][2]/pre'):
+                    lyrics_html = re.sub(' +', ' ', lyrics.get_attribute("outerHTML").strip().replace('<pre style="font-size:16px;">','').replace("</pre>",'').replace("\n\n","<BR>").replace("\n","<BR>"))
+                    # print(lyrics_html)
+
+                tags = f'{data["lyrics_tag"].strip()} Lyrics,'
+
+                for tags_s in self.browser.find_elements_by_xpath('//a[@class="hashtag"]'):
+                    tags += tags_s.get_attribute("innerText").strip().replace("#","").title()+","
+
+                for tags_s in data["song_detail"].split("<BR>"):
+                    tags += tags_s.partition(":")[2].strip()+","
+
+                # print(tags)
+                # break
+                detail_dic = {
+                    self.headers[0] : data["date"],
+                    self.headers[1] : f'{data["lyrics_tag"]} Lyrics',
+                    self.headers[2] : f'{self.user_selected_option} Lyrics',
+                    self.headers[3] : f'{data["lyrics_tag"]} Lyrics<BR><BR><BR>{lyrics_html}<BR><BR><BR><BR>{data["song_detail"]}',
+                    self.headers[4] : tags.rstrip(",")
+                }
+                writer.writerow(detail_dic)
+                link_count += 1
+        
+        print("\n\nFILE EXPORTING...........")
+        if csv_to_xlsx(filename,filename.replace(".csv",".xlsx")):
+            print(f"\nFILE EXPORTED: {filename.replace('.csv','.xlsx')}...........\n\n")
+        else:
+            print("\n\nFILE EXPORITNG FAILED !!!")
+            wx.MessageBox("FILE EXPORITNG FAILED !!! >>> EXPECTED EXE MAINTEINANCE <<< ", 'ERROR', wx.OK | wx.ICON_ERROR)
+
+        os.remove(filename)
         self.browser.close()
+
 lyricsthings = LyricsThings()
 lyricsthings.user_input()
 lyricsthings.links_scrap()
 lyricsthings.songs_scrap()
+
+
+wx.MessageBox(">>>>>  Data Mining Successfully Done  <<<<<", 'Success', wx.OK | wx.ICON_INFORMATION)
+input('Please Enter To Exit')
+import sys
+sys.exit("Thank You ")

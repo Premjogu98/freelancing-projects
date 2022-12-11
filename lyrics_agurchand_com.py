@@ -222,4 +222,3 @@ wx.MessageBox("Data Mining Successfully Done", 'Success', wx.OK | wx.ICON_INFORM
 input('Please Enter To Exit')
 import sys
 sys.exit("Thank You ")
-exit(0)
