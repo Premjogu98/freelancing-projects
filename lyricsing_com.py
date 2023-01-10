@@ -64,7 +64,19 @@ class LyricsThings:
                     self.sent_error_message(self.error_message1)
             else:
                 self.sent_error_message(self.error_message2)
-
+        while True:
+            print("***  Please Enter Page Number  ***")
+            self.from_page = input(f'PAGE FROM : ').strip()
+            self.to_page = input(f'PAGE TO : ').strip()
+            if self.from_page != "" and self.to_page != "":
+                if(self.regex.search(self.from_page) == None) and (self.regex.search(self.to_page) == None):
+                    self.from_page = int(self.from_page)
+                    self.to_page = int(self.to_page)
+                    break
+                else:
+                    print(self.error_message2)
+            else:
+                print("\n***  Please Enter Page Number  ***\n")
         self.user_selected_option = self.main_filter[self.selected_main_filter]
 
 
@@ -75,9 +87,10 @@ class LyricsThings:
         with open(filename, mode='w',newline='',encoding='utf-8') as csv_file:
             writer = csv.DictWriter(csv_file, fieldnames=self.headers)
             writer.writeheader()
-            page = 1
+            # page = 1
+
             total_link = 1
-            while True:
+            for page in range(self.from_page , self.to_page+1,1):
                 self.browser.get(f"https://lyricsing.com/language/{self.user_selected_option}/page/{str(page)}")
                 time.sleep(2)
                 if len(self.browser.find_elements_by_xpath('//ul[@class="list-inline lyrics-block"]/li/div/a')) != 0:
@@ -108,9 +121,8 @@ class LyricsThings:
                             self.headers[4] : lyrics_tag
                         }
                         writer.writerow(detail_dic)
-                        print(f'{str(total_link)} Link Scraped == {data["link"]}')
+                        print(f'PAGE {str(page)}/{str(self.to_page)} == Link {str(total_link)} --> {data["link"]}')
                         total_link += 1
-                    page += 1
                 else:
                     print("NOTHING TO SCRAP")
                     break
