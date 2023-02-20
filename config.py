@@ -50,7 +50,7 @@ def error_log(e, source_page = "lyrics.py"):
     if source_page != "":
         error_came_from = f'\nError Came From : {source_page}.py'
     error = f"""========================================================================\nERROR AAYA HAI\nDateTime : {dt_string}{error_came_from}\nError File : {filename}\nError Fun Name : {funtion_name}\nError : {e}\nError Type : {exc_type}\nError Line No : {lineno}\nError Line Text : '{line.strip()}')\n========================================================================"""
-    # print(error)
+    print(error)
     with open('errors_log.txt','a',encoding='utf-8') as file:
         file.write(error)
         file.close()

@@ -9,6 +9,7 @@ import re
 import os
 import csv
 from datetime import datetime
+from csv_to_xlsx import csv_to_xlsx
 import wx
 app = wx.App()
 class LyricsThings:
@@ -48,7 +49,9 @@ class LyricsThings:
         self.error_message5 = "\n *** Please Close Opened CSV Sheet An Try It Again OR Restart Application *** \n"
         self.error_message6 = "\n *** Taking Longer Time To Load URL Please Restart Application *** \n"
         self.browser = driver_setup()
-        self.headers = ["Date","Title","Categories", "Lyrics","Tag"]
+        if not self.browser:
+            sys.exit()
+        self.headers = ["Date","Title","Lyrics","Categories","Tag"]
 
     def sent_error_message(self, message):
         print(message)
@@ -180,8 +183,9 @@ class LyricsThings:
             writer = csv.DictWriter(csv_file, fieldnames=self.headers)
             writer.writeheader()
             total_links = []
-            for link in self.browser.find_elements_by_xpath('//*[@id="top-songs"]/div/div[3]/a'):
+            for link in self.browser.find_elements_by_xpath('//*[@id="top-songs"]/div/div[2]/a'):
                 total_links.append(link.get_attribute("href"))
+            # print(total_links)
             for count, link in enumerate(total_links):
                 while True:
                     try:
@@ -200,73 +204,88 @@ class LyricsThings:
                                     time.sleep(3)
                                     error += 1
                         
-                        title = ''
-                        for song_title in self.browser.find_elements_by_xpath('//span[starts-with(@class,"SongHeaderdesktop__HiddenMask")]'):
-                            title = f'{song_title.get_attribute("innerText").strip().capitalize()} Lyrics'
+                        unrelease_message = ""
+                        for message in self.browser.find_elements_by_xpath('//div[starts-with(@class,"LyricsPlaceholder__Message")]'):
+                            unrelease_message = message.get_attribute("innerText").strip()
                             break
-                        # print("Title: ",title)
-                        
-                        released_date = ''
-                        artist = ""
-                        for data in self.browser.find_elements_by_xpath('//div[starts-with(@class,"HeaderMetadata__Section")]'):
-                            type = data.get_attribute("innerText").strip()
-                            if "Produced by" in type:
-                                artist = re.sub('\s+', ' ', type)
-                                if "more" in artist:
-                                    artist = artist.partition(",")[0]
-                                title += f' - {artist.replace("Produced by","").replace("&",",")}'
-                                # print("artist: ",type)
-                                
-                            elif "Release Date" in type:
-                                released_date = re.sub('\s+', ' ', type).replace("Release Date","").replace("&",",")
-                                # print("Released_date: ",released_date)
-
-                        info = ''
-                        for song_info in self.browser.find_elements_by_xpath(self.song_info):
-                            main = song_info.get_attribute("innerText").replace('©','').replace('℗','').strip()
-                            info_list = main.split("\n")
-                            while len(info_list) != 0:
-                                try:
-                                    if "Samples" not in info_list[0] or "Covers" not in info_list[0] or "Remixes" not in info_list[0] or "Release Date" not in info_list[0]:
-                                        
-                                        if len(info_list[0]) <= 20:
-                                            if len(info_list[1].strip()) > 150:
-                                                info_list[1] = f'{info_list[1][:150].strip()}...'
-                                            info += f"{info_list[0].strip()}:{info_list[1]}<BR>"
-                                    # print(info_list[0],":",info_list[1])
-                                    del info_list[0]
-                                    del info_list[0]
-                                except Exception as e:
-                                    error_log(e)
-                                    print(link)
-                                    print("Index Error")
-                                    time.sleep(5)
+                        if "yet to be released" not in unrelease_message:
+                            
+                            artist = ""
+                            title = ""
+                            title_with_artist = ""
+                            for song_title in self.browser.find_elements_by_xpath('//h1[starts-with(@class,"SongHeaderWithPrimis__Title")]/span'):
+                                title_with_artist = title = f'{song_title.get_attribute("innerText").strip().capitalize()} Lyrics'
+                                break
+                            if not title:
+                                for song_title in self.browser.find_elements_by_xpath('//h1[starts-with(@class,"SongHeaderdesktop__Title")]/span'):
+                                    title_with_artist = title = f'{song_title.get_attribute("innerText").strip().capitalize()} Lyrics'
                                     break
-                            break
-                        info = info.rstrip("<BR>")
-                        # print("Song Info: ",info)
+                            # print("Title: ",title)
+                            for song_artist in self.browser.find_elements_by_xpath('//div[starts-with(@class,"HeaderArtistAndTracklistPrimis")]/a'):
+                                artist += song_artist.get_attribute("innerText").strip().capitalize()+' | '
+                            if artist:
+                                artist = artist.strip().rstrip("|").strip()
+                                title_with_artist += f' - {artist}'
+                            if not artist:
+                                for song_artist in self.browser.find_elements_by_xpath('//a[contains(@class,"SongHeaderdesktop__Artist")]'):
+                                    artist += song_artist.get_attribute("innerText").strip().capitalize()+' | '
+                                if artist:
+                                    artist = artist.strip().rstrip("|").strip()
+                                    title_with_artist += f' - {artist}'
+                            # print("artist: ",artist)
+                            info = ''
+                            album_text = ''
+                            released_date = ''
+                            for album in self.browser.find_elements_by_xpath('//div[contains(@class,"HeaderArtistAndTracklistPrimis__Tracklist")]/a'):
+                                album_text = album.get_attribute("innerText").strip()
+                                break
+                            label_len = 0
+                            try:
+                                label_len = len(self.browser.find_elements_by_xpath('//div[starts-with(@class,"SongInfo__Columns")]/div'))
+                            except Exception as e:
+                                error_log(e)
+                            for index in range(1,label_len+1,1):
+                                for cred_label in self.browser.find_elements_by_xpath(f'//div[starts-with(@class,"SongInfo__Columns")]/div[{index}]/div[1]'):
+                                    cred_label_text = cred_label.get_attribute("innerText").replace('©','').replace('℗','').strip()
+                                    break
+                                for cred_label_val in self.browser.find_elements_by_xpath(f'//div[starts-with(@class,"SongInfo__Columns")]/div[{index}]/div[2]'):
+                                    cred_label_val_text = cred_label_val.get_attribute("innerText").strip()
+                                    if "Release Date" in cred_label_text:
+                                        released_date = cred_label_val_text
+                                    break
+                                if released_date:
+                                    break
+                            if album_text:
+                                info += f"""<p style="margin: 5px;"><strong>Album</strong> - {album_text} By {artist}</p>"""
+                            else:
+                                info += f"""<p style="margin: 5px;"><strong>Album</strong> - {title.replace("Lyrics","").strip()} By {artist}</p>"""
+                            if released_date:
+                                info +=  f"""<p style="margin-top: 5px;"><strong>Release Date</strong> - {released_date}</p>"""
+                                
+                            # print("Song Info: ",info)
 
-                        lyrics = ''
-                        for song_lyrics in self.browser.find_elements_by_xpath('//div[@class="Lyrics__Container-sc-1ynbvzw-6 YYrds"]'):
-                            lyrics += f"{title} <BR><BR><BR>"
-                            lyrics += song_lyrics.get_attribute("innerText").strip().replace('\n',"<BR>").replace("<BR><BR>",'<BR>')
-                            lyrics += f"<BR><BR><BR><BR>{info}"
-                            break
-                        
-                        # print("Song lyrics: ",lyrics)
+                            lyrics = ''
+                            complete_lyrics = ""
+                            for song_lyrics in self.browser.find_elements_by_xpath('//div[@class="Lyrics__Container-sc-1ynbvzw-6 YYrds"]'):
+                                lyrics += song_lyrics.get_attribute("innerText").strip().replace('\n',"<BR>")
 
-                        tag = ''
-                        tag += title + ','
-                        for song_tag in self.browser.find_elements_by_xpath(self.song_tags):
-                            tag += song_tag.get_attribute("innerText").strip() + ','
-                        tag = tag.rstrip(',')
-                        # print("Song Tag: ",tag)
-                        if re.match("^[\W A-Za-z0-9_@?./#&+-]*$", lyrics+tag):
+                            complete_lyrics += f'<h2 style="text-align: center;">{title_with_artist}</h2> <BR><BR><BR>'
+                            complete_lyrics += f'<p style="text-align: center;">{lyrics}</p>'
+                            complete_lyrics += f'<BR><BR><BR><BR><blockquote style="text-align: center;">{info}</blockquote>'
+                            # print("Song lyrics: ",lyrics)
+                            
+                            tag = ''
+                            tag += title + ','
+                            for song_tag in self.browser.find_elements_by_xpath(self.song_tags):
+                                tag += song_tag.get_attribute("innerText").strip() + ','
+                            tag = tag.strip(',').rstrip(',')
+                            # print("Song Tag: ",tag)
+                            # if re.match("^[\W A-Za-z0-9_@?./#&+-]*$", lyrics+tag):
                             detail_dic = {
                                     self.headers[0] : released_date,
-                                    self.headers[1] : title,
-                                    self.headers[2] : "English Lyrics",
-                                    self.headers[3] : lyrics.replace('©','').replace('℗','').strip(),
+                                    self.headers[1] : title_with_artist,
+                                    self.headers[2] : complete_lyrics.replace('©','').replace('℗','').strip(),
+                                    self.headers[3] : "English Lyrics",
                                     self.headers[4] : tag
                                 }
                             writer.writerow(detail_dic)
@@ -275,12 +294,21 @@ class LyricsThings:
                         error_log(e)
                         print(f"Retrying ... {link} ")
                         time.sleep(2)
+        
+        print("\n\nFILE EXPORTING...........")
+        if csv_to_xlsx(filename,filename.replace(".csv",".xlsx")):
+            print(f"\nFILE EXPORTED: {filename.replace('.csv','.xlsx')}...........\n\n")
+        else:
+            print("\n\nFILE EXPORITNG FAILED !!!")
+            wx.MessageBox("FILE EXPORITNG FAILED !!! >>> EXPECTED EXE MAINTEINANCE <<< ", 'ERROR', wx.OK | wx.ICON_ERROR)
 
+        os.remove(filename)
+        self.browser.quit()
     def album_scrap(self):
         while True:
             try:
                 total_albums = []
-                for link in self.browser.find_elements_by_xpath('//*[@id="top-songs"]/div/div[3]/a'):
+                for link in self.browser.find_elements_by_xpath('//div[@id="top-songs"]/div/div[2]/a'):
                     total_albums.append(link.get_attribute("href"))
                 break
             except Exception as e:
@@ -314,7 +342,7 @@ class LyricsThings:
                     error_log(e)
                     print(f"Retrying ... {link} ")
                     time.sleep(2)
-        
+                
         date = datetime.now().strftime("%Y-%m-%d-%H.%M")
         filename = f"./{date} {self.main_filter[self.selected_main_filter]} {self.base_filter[self.selected_base_filter]} Data.csv"
         with open(filename, mode='w',newline='',encoding='utf-8') as csv_file:
@@ -337,75 +365,88 @@ class LyricsThings:
                                     print(f"Retrying ... {link} ")
                                     time.sleep(3)
                                     error += 1
-                        
-                        title = ''
-                        for song_title in self.browser.find_elements_by_xpath('//span[starts-with(@class,"SongHeaderdesktop__HiddenMask")]'):
-                            title = f'{song_title.get_attribute("innerText").strip().capitalize()} Lyrics'
+                        unrelease_message = ""
+                        for message in self.browser.find_elements_by_xpath('//div[starts-with(@class,"LyricsPlaceholder__Message")]'):
+                            unrelease_message = message.get_attribute("innerText").strip()
                             break
-                        # print("Title: ",title)
-                        
-                        released_date = ''
-                        artist = ""
-                        for data in self.browser.find_elements_by_xpath('//div[starts-with(@class,"HeaderMetadata__Section")]'):
-                            type = data.get_attribute("innerText").strip()
-                            if "Produced by" in type:
-                                artist = re.sub('\s+', ' ', type)
-                                if "more" in artist:
-                                    artist = artist.partition(",")[0]
-                                title += f' - {artist.replace("Produced by","").replace("&",",")}'
-                                # print("artist: ",type)
-                                
-                            elif "Release Date" in type:
-                                released_date = re.sub('\s+', ' ', type).replace("Release Date","").replace("&",",")
-                                # print("Released_date: ",released_date)
-
-                        info = ''
-                        for song_info in self.browser.find_elements_by_xpath(self.song_info):
-                            main = song_info.get_attribute("innerText").replace('©','').replace('℗','').strip()
-                            info_list = main.split("\n")
-                            while len(info_list) != 0:
-                                try:
-                                    if "Samples" not in info_list[0] or "Covers" not in info_list[0] or "Remixes" not in info_list[0] or "Release Date" not in info_list[0]:
-                                        
-                                        if len(info_list[0]) <= 20:
-                                            if len(info_list[1].strip()) > 150:
-                                                info_list[1] = f'{info_list[1][:150].strip()}...'
-                                            info += f"{info_list[0].strip()}:{info_list[1]}<BR>"
-                                    # print(info_list[0],":",info_list[1])
-                                    del info_list[0]
-                                    del info_list[0]
-                                except Exception as e:
-                                    error_log(e)
-                                    print(link)
-                                    print("Index Error")
-                                    time.sleep(5)
+                        if "yet to be released" not in unrelease_message:
+                            
+                            artist = ""
+                            title = ""
+                            title_with_artist = ""
+                            for song_title in self.browser.find_elements_by_xpath('//h1[starts-with(@class,"SongHeaderWithPrimis__Title")]/span'):
+                                title_with_artist = title = f'{song_title.get_attribute("innerText").strip().capitalize()} Lyrics'
+                                break
+                            if not title:
+                                for song_title in self.browser.find_elements_by_xpath('//h1[starts-with(@class,"SongHeaderdesktop__Title")]/span'):
+                                    title_with_artist = title = f'{song_title.get_attribute("innerText").strip().capitalize()} Lyrics'
                                     break
+                            # print("Title: ",title)
+                            for song_artist in self.browser.find_elements_by_xpath('//div[starts-with(@class,"HeaderArtistAndTracklistPrimis")]/a'):
+                                artist += song_artist.get_attribute("innerText").strip().capitalize()+' | '
+                            if artist:
+                                artist = artist.strip().rstrip("|").strip()
+                                title_with_artist += f' - {artist}'
+                            if not artist:
+                                for song_artist in self.browser.find_elements_by_xpath('//a[contains(@class,"SongHeaderdesktop__Artist")]'):
+                                    artist += song_artist.get_attribute("innerText").strip().capitalize()+' | '
+                                if artist:
+                                    artist = artist.strip().rstrip("|").strip()
+                                    title_with_artist += f' - {artist}'
+                            # print("artist: ",artist)
+                            info = ''
+                            album_text = ''
+                            released_date = ''
+                            for album in self.browser.find_elements_by_xpath('//div[contains(@class,"HeaderArtistAndTracklistPrimis__Tracklist")]/a'):
+                                album_text = album.get_attribute("innerText").strip()
+                                break
+                            label_len = 0
+                            try:
+                                label_len = len(self.browser.find_elements_by_xpath('//div[starts-with(@class,"SongInfo__Columns")]/div'))
+                            except Exception as e:
+                                error_log(e)
+                            for index in range(1,label_len+1,1):
+                                for cred_label in self.browser.find_elements_by_xpath(f'//div[starts-with(@class,"SongInfo__Columns")]/div[{index}]/div[1]'):
+                                    cred_label_text = cred_label.get_attribute("innerText").replace('©','').replace('℗','').strip()
+                                    break
+                                for cred_label_val in self.browser.find_elements_by_xpath(f'//div[starts-with(@class,"SongInfo__Columns")]/div[{index}]/div[2]'):
+                                    cred_label_val_text = cred_label_val.get_attribute("innerText").strip()
+                                    if "Release Date" in cred_label_text:
+                                        released_date = cred_label_val_text
+                                    break
+                                if released_date:
+                                    break
+                            if album_text:
+                                info += f"""<p style="margin: 5px;"><strong>Album</strong> - {album_text} By {artist}</p>"""
+                            else:
+                                info += f"""<p style="margin: 5px;"><strong>Album</strong> - {title.replace("Lyrics","").strip()} By {artist}</p>"""
+                            if released_date:
+                                info +=  f"""<p style="margin-top: 5px;"><strong>Release Date</strong> - {released_date}</p>"""
+                                
+                            # print("Song Info: ",info)
 
-                            break
-                        info = info.rstrip("<BR>")
-                        # print("Song Info: ",info)
+                            lyrics = ''
+                            complete_lyrics = ""
+                            for song_lyrics in self.browser.find_elements_by_xpath('//div[@class="Lyrics__Container-sc-1ynbvzw-6 YYrds"]'):
+                                lyrics += song_lyrics.get_attribute("innerText").strip().replace('\n',"<BR>")
 
-                        lyrics = ''
-                        for song_lyrics in self.browser.find_elements_by_xpath('//div[@class="Lyrics__Container-sc-1ynbvzw-6 YYrds"]'):
-                            lyrics += f"{title} <BR><BR><BR>"
-                            lyrics += song_lyrics.get_attribute("innerText").strip().replace('\n',"<BR>").replace("<BR><BR>",'<BR>')
-                            lyrics += f"<BR><BR><BR><BR>{info}"
-                            break
-                        
-                        # print("Song lyrics: ",lyrics)
-
-                        tag = ''
-                        tag += title + ','
-                        for song_tag in self.browser.find_elements_by_xpath(self.song_tags):
-                            tag += song_tag.get_attribute("innerText").strip() + ','
-                        tag = tag.rstrip(',')
-                        # print("Song Tag: ",tag)
-                        if re.match("^[\W A-Za-z0-9_@?./#&+-]*$", lyrics+tag):
+                            complete_lyrics += f'<h2 style="text-align: center;">{title_with_artist}</h2> <BR><BR><BR>'
+                            complete_lyrics += f'<p style="text-align: center;">{lyrics}</p>'
+                            complete_lyrics += f'<BR><BR><BR><BR><blockquote style="text-align: center;">{info}</blockquote>'
+                            # print("Song lyrics: ",lyrics)
+                            
+                            tag = ''
+                            tag += title + ','
+                            for song_tag in self.browser.find_elements_by_xpath(self.song_tags):
+                                tag += song_tag.get_attribute("innerText").strip() + ','
+                            tag = tag.strip(',').rstrip(',')
+                            # print("Song Tag: ",tag)
+                            # if re.match("^[\W A-Za-z0-9_@?./#&+-]*$", lyrics+tag):
                             detail_dic = {
                                     self.headers[0] : released_date,
-                                    self.headers[1] : title,
-                                    self.headers[2] : "English Lyrics",
-                                    self.headers[3] : lyrics.replace('©','').replace('℗','').strip(),
+                                    self.headers[1] : title_with_artist,
+                                    self.headers[2] : complete_lyrics.replace('©','').replace('℗','').strip(),
+                                    self.headers[3] : "English Lyrics",
                                     self.headers[4] : tag
                                 }
                             writer.writerow(detail_dic)
@@ -414,7 +455,17 @@ class LyricsThings:
                         error_log(e)
                         print(f"Retrying ... {link} ")
                         time.sleep(2)
+        
+        print("\n\nFILE EXPORTING...........")
+        if csv_to_xlsx(filename,filename.replace(".csv",".xlsx")):
+            print(f"\nFILE EXPORTED: {filename.replace('.csv','.xlsx')}...........\n\n")
+        else:
+            print("\n\nFILE EXPORITNG FAILED !!!")
+            wx.MessageBox("FILE EXPORITNG FAILED !!! >>> EXPECTED EXE MAINTEINANCE <<< ", 'ERROR', wx.OK | wx.ICON_ERROR)
 
+        os.remove(filename)
+        self.browser.quit()
+        
 lyricsthings = LyricsThings()
 filter_type = lyricsthings.userinput()
 lyricsthings.clicking_things()
