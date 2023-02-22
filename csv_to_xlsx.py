@@ -1,9 +1,17 @@
 import csv
-from openpyxl import Workbook
+from openpyxl import Workbook,load_workbook
 
 # Variables
+def change_something(xlsx_filepath):
+    wb = load_workbook(xlsx_filepath)
+    ws = wb.active
+    for rowNum in range(2, ws.max_row):
+        data = ws.cell(row=rowNum, column=3).value
+        # print(data)
+        ws.cell(row=rowNum, column=3, value=data.replace("!)",'"'))
+    wb.save(xlsx_filepath)
 
-def csv_to_xlsx(csv_filepath=None, xlsx_filepath=None):
+def csv_to_xlsx(csv_filepath=None, xlsx_filepath=None,special=False):
     wb = Workbook()
     ws = wb.active
     if csv_filepath != None and xlsx_filepath != None:
@@ -27,10 +35,13 @@ def csv_to_xlsx(csv_filepath=None, xlsx_filepath=None):
                                 cell.value = cell.value
                         # print(type(cell.value))
                     wb.save(filename = xlsx_filepath)
-                return True
+            if special:
+                change_something(xlsx_filepath)
+            return True
         except Exception as e:
             print(e)
             return False
     else:
         print("FILE PATH MISSING PLEASE ENTER FILE PATH")
         return False
+

@@ -192,7 +192,7 @@ class LyricsThings:
                         error = 0
                         while True:
                             try:
-                                print(count, link," Navigating Link ....")
+                                print(f"{count}/{len(total_links)}  {link} Navigating Link ....")
                                 self.browser.get(link)
                                 time.sleep(3)
                                 break
@@ -220,6 +220,8 @@ class LyricsThings:
                                 for song_title in self.browser.find_elements_by_xpath('//h1[starts-with(@class,"SongHeaderdesktop__Title")]/span'):
                                     title_with_artist = title = f'{song_title.get_attribute("innerText").strip().capitalize()} Lyrics'
                                     break
+                            if not title_with_artist:
+                                title_with_artist = "Unknown"
                             # print("Title: ",title)
                             for song_artist in self.browser.find_elements_by_xpath('//div[starts-with(@class,"HeaderArtistAndTracklistPrimis")]/a'):
                                 artist += song_artist.get_attribute("innerText").strip().capitalize()+' | '
@@ -239,6 +241,10 @@ class LyricsThings:
                             for album in self.browser.find_elements_by_xpath('//div[contains(@class,"HeaderArtistAndTracklistPrimis__Tracklist")]/a'):
                                 album_text = album.get_attribute("innerText").strip()
                                 break
+                            if not album_text:
+                                for album in self.browser.find_elements_by_xpath('//div[contains(@class,"HeaderTracklist__Album")]/a'):
+                                    album_text = album.get_attribute("innerText").strip()
+                                    break
                             label_len = 0
                             try:
                                 label_len = len(self.browser.find_elements_by_xpath('//div[starts-with(@class,"SongInfo__Columns")]/div'))
@@ -255,12 +261,16 @@ class LyricsThings:
                                     break
                                 if released_date:
                                     break
+                            if not released_date:
+                                released_date = "Unknown"
                             if album_text:
-                                info += f"""<p style="margin: 5px;"><strong>Album</strong> - {album_text} By {artist}</p>"""
+                                info += f"""<p style=!)margin: 5px;!)><strong>Album</strong> - {album_text} By {artist}</p>"""
                             else:
-                                info += f"""<p style="margin: 5px;"><strong>Album</strong> - {title.replace("Lyrics","").strip()} By {artist}</p>"""
+                                info += f"""<p style=!)margin: 5px;!)><strong>Album</strong> - Unknown</p>"""
                             if released_date:
-                                info +=  f"""<p style="margin-top: 5px;"><strong>Release Date</strong> - {released_date}</p>"""
+                                info +=  f"""<p style=!)margin-top: 5px;!)><strong>Release Date</strong> - {released_date}</p>"""
+                            else:
+                                info +=  f"""<p style=!)margin-top: 5px;!)><strong>Release Date</strong> - Unknown</p>"""
                                 
                             # print("Song Info: ",info)
 
@@ -269,9 +279,9 @@ class LyricsThings:
                             for song_lyrics in self.browser.find_elements_by_xpath('//div[@class="Lyrics__Container-sc-1ynbvzw-6 YYrds"]'):
                                 lyrics += song_lyrics.get_attribute("innerText").strip().replace('\n',"<BR>")
 
-                            complete_lyrics += f'<h2 style="text-align: center;">{title_with_artist}</h2> <BR><BR><BR>'
-                            complete_lyrics += f'<p style="text-align: center;">{lyrics}</p>'
-                            complete_lyrics += f'<BR><BR><BR><BR><blockquote style="text-align: center;">{info}</blockquote>'
+                            complete_lyrics += f'<h2 style=!)text-align: center;!)>{title_with_artist.replace(" - Genius romanizations","").replace(" - Genius english translations","")}</h2> <BR><BR><BR>'
+                            complete_lyrics += f'<p style=!)text-align: center;!)>{lyrics}</p>'
+                            complete_lyrics += f'<BR><BR><BR><BR><blockquote style=!)text-align: center;!)>{info}</blockquote>'
                             # print("Song lyrics: ",lyrics)
                             
                             tag = ''
@@ -283,7 +293,7 @@ class LyricsThings:
                             # if re.match("^[\W A-Za-z0-9_@?./#&+-]*$", lyrics+tag):
                             detail_dic = {
                                     self.headers[0] : released_date,
-                                    self.headers[1] : title_with_artist,
+                                    self.headers[1] : title_with_artist.replace(" - Genius romanizations","").replace(" - Genius english translations",""),
                                     self.headers[2] : complete_lyrics.replace('©','').replace('℗','').strip(),
                                     self.headers[3] : "English Lyrics",
                                     self.headers[4] : tag
@@ -296,7 +306,7 @@ class LyricsThings:
                         time.sleep(2)
         
         print("\n\nFILE EXPORTING...........")
-        if csv_to_xlsx(filename,filename.replace(".csv",".xlsx")):
+        if csv_to_xlsx(filename,filename.replace(".csv",".xlsx"),special=True):
             print(f"\nFILE EXPORTED: {filename.replace('.csv','.xlsx')}...........\n\n")
         else:
             print("\n\nFILE EXPORITNG FAILED !!!")
@@ -354,7 +364,7 @@ class LyricsThings:
                         error = 0
                         while True:
                             try:
-                                print(count, link," Navigating Link ....")
+                                print(f"{count}/{len(total_links)}  {link} Navigating Link ....")
                                 self.browser.get(link)
                                 time.sleep(3)
                                 break
@@ -381,6 +391,8 @@ class LyricsThings:
                                 for song_title in self.browser.find_elements_by_xpath('//h1[starts-with(@class,"SongHeaderdesktop__Title")]/span'):
                                     title_with_artist = title = f'{song_title.get_attribute("innerText").strip().capitalize()} Lyrics'
                                     break
+                            if not title_with_artist:
+                                title_with_artist = "Unknown"
                             # print("Title: ",title)
                             for song_artist in self.browser.find_elements_by_xpath('//div[starts-with(@class,"HeaderArtistAndTracklistPrimis")]/a'):
                                 artist += song_artist.get_attribute("innerText").strip().capitalize()+' | '
@@ -400,6 +412,10 @@ class LyricsThings:
                             for album in self.browser.find_elements_by_xpath('//div[contains(@class,"HeaderArtistAndTracklistPrimis__Tracklist")]/a'):
                                 album_text = album.get_attribute("innerText").strip()
                                 break
+                            if not album_text:
+                                for album in self.browser.find_elements_by_xpath('//div[contains(@class,"HeaderTracklist__Album")]/a'):
+                                    album_text = album.get_attribute("innerText").strip()
+                                    break
                             label_len = 0
                             try:
                                 label_len = len(self.browser.find_elements_by_xpath('//div[starts-with(@class,"SongInfo__Columns")]/div'))
@@ -416,12 +432,16 @@ class LyricsThings:
                                     break
                                 if released_date:
                                     break
+                            if not released_date:
+                                released_date = "Unknown"
                             if album_text:
-                                info += f"""<p style="margin: 5px;"><strong>Album</strong> - {album_text} By {artist}</p>"""
+                                info += f"""<p style=!)margin: 5px;!)><strong>Album</strong> - {album_text} By {artist}</p>"""
                             else:
-                                info += f"""<p style="margin: 5px;"><strong>Album</strong> - {title.replace("Lyrics","").strip()} By {artist}</p>"""
+                                info += f"""<p style=!)margin: 5px;!)><strong>Album</strong> - Unknown</p>"""
                             if released_date:
-                                info +=  f"""<p style="margin-top: 5px;"><strong>Release Date</strong> - {released_date}</p>"""
+                                info +=  f"""<p style=!)margin-top: 5px;!)><strong>Release Date</strong> - {released_date}</p>"""
+                            else:
+                                info +=  f"""<p style=!)margin-top: 5px;!)><strong>Release Date</strong> - Unknown</p>"""
                                 
                             # print("Song Info: ",info)
 
@@ -430,9 +450,9 @@ class LyricsThings:
                             for song_lyrics in self.browser.find_elements_by_xpath('//div[@class="Lyrics__Container-sc-1ynbvzw-6 YYrds"]'):
                                 lyrics += song_lyrics.get_attribute("innerText").strip().replace('\n',"<BR>")
 
-                            complete_lyrics += f'<h2 style="text-align: center;">{title_with_artist}</h2> <BR><BR><BR>'
-                            complete_lyrics += f'<p style="text-align: center;">{lyrics}</p>'
-                            complete_lyrics += f'<BR><BR><BR><BR><blockquote style="text-align: center;">{info}</blockquote>'
+                            complete_lyrics += f'<h2 style=!)text-align: center;!)>{title_with_artist.replace(" - Genius romanizations","").replace(" - Genius english translations","")}</h2> <BR><BR><BR>'
+                            complete_lyrics += f'<p style=!)text-align: center;!)>{lyrics}</p>'
+                            complete_lyrics += f'<BR><BR><BR><BR><blockquote style=!)text-align: center;!)>{info}</blockquote>'
                             # print("Song lyrics: ",lyrics)
                             
                             tag = ''
@@ -444,7 +464,7 @@ class LyricsThings:
                             # if re.match("^[\W A-Za-z0-9_@?./#&+-]*$", lyrics+tag):
                             detail_dic = {
                                     self.headers[0] : released_date,
-                                    self.headers[1] : title_with_artist,
+                                    self.headers[1] : title_with_artist.replace(" - Genius romanizations","").replace(" - Genius english translations",""),
                                     self.headers[2] : complete_lyrics.replace('©','').replace('℗','').strip(),
                                     self.headers[3] : "English Lyrics",
                                     self.headers[4] : tag
@@ -457,7 +477,7 @@ class LyricsThings:
                         time.sleep(2)
         
         print("\n\nFILE EXPORTING...........")
-        if csv_to_xlsx(filename,filename.replace(".csv",".xlsx")):
+        if csv_to_xlsx(filename,filename.replace(".csv",".xlsx"),special=True):
             print(f"\nFILE EXPORTED: {filename.replace('.csv','.xlsx')}...........\n\n")
         else:
             print("\n\nFILE EXPORITNG FAILED !!!")

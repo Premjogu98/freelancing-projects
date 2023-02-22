@@ -681,7 +681,6 @@
    'C:\\Program Files\\Python37\\lib\\distutils\\config.py',
    'PYMODULE'),
   ('cgi', 'C:\\Program Files\\Python37\\lib\\cgi.py', 'PYMODULE'),
-  ('_py_abc', 'C:\\Program Files\\Python37\\lib\\_py_abc.py', 'PYMODULE'),
   ('getpass', 'C:\\Program Files\\Python37\\lib\\getpass.py', 'PYMODULE'),
   ('nturl2path', 'C:\\Program Files\\Python37\\lib\\nturl2path.py', 'PYMODULE'),
   ('ftplib', 'C:\\Program Files\\Python37\\lib\\ftplib.py', 'PYMODULE'),
@@ -691,6 +690,7 @@
    'PYMODULE'),
   ('typing', 'C:\\Program Files\\Python37\\lib\\typing.py', 'PYMODULE'),
   ('stringprep', 'C:\\Program Files\\Python37\\lib\\stringprep.py', 'PYMODULE'),
+  ('_py_abc', 'C:\\Program Files\\Python37\\lib\\_py_abc.py', 'PYMODULE'),
   ('wx',
    'e:\\freelancing project\\lyrics '
    'project\\env\\lib\\site-packages\\wx\\__init__.py',

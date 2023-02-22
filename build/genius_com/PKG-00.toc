@@ -198,82 +198,58 @@
   ('libssl-1_1.dll',
    'C:\\Program Files\\Python37\\DLLs\\libssl-1_1.dll',
    'BINARY'),
-  ('wx\\wxbase315u_vc140_x64.dll',
-   'e:\\freelancing project\\lyrics '
-   'project\\env\\lib\\site-packages\\wx\\wxbase315u_vc140_x64.dll',
-   'BINARY'),
   ('wx\\wxmsw315u_core_vc140_x64.dll',
    'e:\\freelancing project\\lyrics '
    'project\\env\\lib\\site-packages\\wx\\wxmsw315u_core_vc140_x64.dll',
+   'BINARY'),
+  ('wx\\wxbase315u_vc140_x64.dll',
+   'e:\\freelancing project\\lyrics '
+   'project\\env\\lib\\site-packages\\wx\\wxbase315u_vc140_x64.dll',
    'BINARY'),
   ('wx\\wxmsw315u_html_vc140_x64.dll',
    'e:\\freelancing project\\lyrics '
    'project\\env\\lib\\site-packages\\wx\\wxmsw315u_html_vc140_x64.dll',
    'BINARY'),
-  ('wx\\MSVCP140.dll',
-   'e:\\freelancing project\\lyrics '
-   'project\\env\\lib\\site-packages\\wx\\MSVCP140.dll',
-   'BINARY'),
   ('wx\\wxbase315u_net_vc140_x64.dll',
    'e:\\freelancing project\\lyrics '
    'project\\env\\lib\\site-packages\\wx\\wxbase315u_net_vc140_x64.dll',
+   'BINARY'),
+  ('wx\\MSVCP140.dll',
+   'e:\\freelancing project\\lyrics '
+   'project\\env\\lib\\site-packages\\wx\\MSVCP140.dll',
    'BINARY'),
   ('python3.dll', 'C:\\Program Files\\Python37\\python3.dll', 'BINARY'),
   ('base_library.zip',
    'E:\\freelancing project\\lyrics '
    'project\\build\\genius_com\\base_library.zip',
    'DATA'),
-  ('selenium\\webdriver\\firefox\\webdriver_prefs.json',
-   'e:\\freelancing project\\lyrics '
-   'project\\env\\lib\\site-packages\\selenium\\webdriver\\firefox\\webdriver_prefs.json',
-   'DATA'),
-  ('selenium\\webdriver\\common\\devtools\\v94\\py.typed',
-   'e:\\freelancing project\\lyrics '
-   'project\\env\\lib\\site-packages\\selenium\\webdriver\\common\\devtools\\v94\\py.typed',
-   'DATA'),
   ('cryptography-38.0.4.dist-info\\top_level.txt',
    'e:\\freelancing project\\lyrics '
    'project\\env\\lib\\site-packages\\cryptography-38.0.4.dist-info\\top_level.txt',
    'DATA'),
-  ('cryptography-38.0.4.dist-info\\LICENSE',
+  ('selenium\\webdriver\\remote\\findElements.js',
    'e:\\freelancing project\\lyrics '
-   'project\\env\\lib\\site-packages\\cryptography-38.0.4.dist-info\\LICENSE',
+   'project\\env\\lib\\site-packages\\selenium\\webdriver\\remote\\findElements.js',
    'DATA'),
-  ('certifi\\py.typed',
+  ('cryptography-38.0.4.dist-info\\LICENSE.APACHE',
    'e:\\freelancing project\\lyrics '
-   'project\\env\\lib\\site-packages\\certifi\\py.typed',
-   'DATA'),
-  ('cryptography-38.0.4.dist-info\\METADATA',
-   'e:\\freelancing project\\lyrics '
-   'project\\env\\lib\\site-packages\\cryptography-38.0.4.dist-info\\METADATA',
-   'DATA'),
-  ('cryptography-38.0.4.dist-info\\INSTALLER',
-   'e:\\freelancing project\\lyrics '
-   'project\\env\\lib\\site-packages\\cryptography-38.0.4.dist-info\\INSTALLER',
-   'DATA'),
-  ('selenium\\webdriver\\common\\mutation-listener.js',
-   'e:\\freelancing project\\lyrics '
-   'project\\env\\lib\\site-packages\\selenium\\webdriver\\common\\mutation-listener.js',
-   'DATA'),
-  ('cryptography-38.0.4.dist-info\\WHEEL',
-   'e:\\freelancing project\\lyrics '
-   'project\\env\\lib\\site-packages\\cryptography-38.0.4.dist-info\\WHEEL',
+   'project\\env\\lib\\site-packages\\cryptography-38.0.4.dist-info\\LICENSE.APACHE',
    'DATA'),
   ('certifi\\cacert.pem',
    'e:\\freelancing project\\lyrics '
    'project\\env\\lib\\site-packages\\certifi\\cacert.pem',
    'DATA'),
-  ('cryptography-38.0.4.dist-info\\LICENSE.BSD',
-   'e:\\freelancing project\\lyrics '
-   'project\\env\\lib\\site-packages\\cryptography-38.0.4.dist-info\\LICENSE.BSD',
-   'DATA'),
-  ('cryptography-38.0.4.dist-info\\LICENSE.PSF',
-   'e:\\freelancing project\\lyrics '
-   'project\\env\\lib\\site-packages\\cryptography-38.0.4.dist-info\\LICENSE.PSF',
-   'DATA'),
   ('selenium\\webdriver\\common\\devtools\\v85\\py.typed',
    'e:\\freelancing project\\lyrics '
    'project\\env\\lib\\site-packages\\selenium\\webdriver\\common\\devtools\\v85\\py.typed',
+   'DATA'),
+  ('certifi\\py.typed',
+   'e:\\freelancing project\\lyrics '
+   'project\\env\\lib\\site-packages\\certifi\\py.typed',
+   'DATA'),
+  ('cryptography-38.0.4.dist-info\\INSTALLER',
+   'e:\\freelancing project\\lyrics '
+   'project\\env\\lib\\site-packages\\cryptography-38.0.4.dist-info\\INSTALLER',
    'DATA'),
   ('selenium\\webdriver\\remote\\getAttribute.js',
    'e:\\freelancing project\\lyrics '
@@ -283,45 +259,61 @@
    'e:\\freelancing project\\lyrics '
    'project\\env\\lib\\site-packages\\selenium\\webdriver\\remote\\isDisplayed.js',
    'DATA'),
-  ('selenium\\webdriver\\common\\devtools\\v96\\py.typed',
-   'e:\\freelancing project\\lyrics '
-   'project\\env\\lib\\site-packages\\selenium\\webdriver\\common\\devtools\\v96\\py.typed',
-   'DATA'),
   ('cryptography-38.0.4.dist-info\\RECORD',
    'e:\\freelancing project\\lyrics '
    'project\\env\\lib\\site-packages\\cryptography-38.0.4.dist-info\\RECORD',
    'DATA'),
-  ('cryptography-38.0.4.dist-info\\LICENSE.APACHE',
+  ('cryptography-38.0.4.dist-info\\LICENSE.PSF',
    'e:\\freelancing project\\lyrics '
-   'project\\env\\lib\\site-packages\\cryptography-38.0.4.dist-info\\LICENSE.APACHE',
+   'project\\env\\lib\\site-packages\\cryptography-38.0.4.dist-info\\LICENSE.PSF',
+   'DATA'),
+  ('selenium\\webdriver\\firefox\\webdriver_prefs.json',
+   'e:\\freelancing project\\lyrics '
+   'project\\env\\lib\\site-packages\\selenium\\webdriver\\firefox\\webdriver_prefs.json',
+   'DATA'),
+  ('selenium\\webdriver\\common\\devtools\\v94\\py.typed',
+   'e:\\freelancing project\\lyrics '
+   'project\\env\\lib\\site-packages\\selenium\\webdriver\\common\\devtools\\v94\\py.typed',
+   'DATA'),
+  ('cryptography-38.0.4.dist-info\\LICENSE.BSD',
+   'e:\\freelancing project\\lyrics '
+   'project\\env\\lib\\site-packages\\cryptography-38.0.4.dist-info\\LICENSE.BSD',
+   'DATA'),
+  ('selenium\\webdriver\\common\\mutation-listener.js',
+   'e:\\freelancing project\\lyrics '
+   'project\\env\\lib\\site-packages\\selenium\\webdriver\\common\\mutation-listener.js',
+   'DATA'),
+  ('selenium\\webdriver\\common\\devtools\\v96\\py.typed',
+   'e:\\freelancing project\\lyrics '
+   'project\\env\\lib\\site-packages\\selenium\\webdriver\\common\\devtools\\v96\\py.typed',
+   'DATA'),
+  ('cryptography-38.0.4.dist-info\\LICENSE',
+   'e:\\freelancing project\\lyrics '
+   'project\\env\\lib\\site-packages\\cryptography-38.0.4.dist-info\\LICENSE',
+   'DATA'),
+  ('cryptography-38.0.4.dist-info\\WHEEL',
+   'e:\\freelancing project\\lyrics '
+   'project\\env\\lib\\site-packages\\cryptography-38.0.4.dist-info\\WHEEL',
    'DATA'),
   ('selenium\\webdriver\\common\\devtools\\v95\\py.typed',
    'e:\\freelancing project\\lyrics '
    'project\\env\\lib\\site-packages\\selenium\\webdriver\\common\\devtools\\v95\\py.typed',
    'DATA'),
-  ('selenium\\webdriver\\remote\\findElements.js',
+  ('cryptography-38.0.4.dist-info\\METADATA',
    'e:\\freelancing project\\lyrics '
-   'project\\env\\lib\\site-packages\\selenium\\webdriver\\remote\\findElements.js',
+   'project\\env\\lib\\site-packages\\cryptography-38.0.4.dist-info\\METADATA',
    'DATA'),
-  ('setuptools-47.1.0.dist-info\\zip-safe',
+  ('pip-20.1.1.dist-info\\METADATA',
    'e:\\freelancing project\\lyrics '
-   'project\\env\\lib\\site-packages\\setuptools-47.1.0.dist-info\\zip-safe',
+   'project\\env\\lib\\site-packages\\pip-20.1.1.dist-info\\METADATA',
+   'DATA'),
+  ('pip-20.1.1.dist-info\\LICENSE.txt',
+   'e:\\freelancing project\\lyrics '
+   'project\\env\\lib\\site-packages\\pip-20.1.1.dist-info\\LICENSE.txt',
    'DATA'),
   ('setuptools-47.1.0.dist-info\\entry_points.txt',
    'e:\\freelancing project\\lyrics '
    'project\\env\\lib\\site-packages\\setuptools-47.1.0.dist-info\\entry_points.txt',
-   'DATA'),
-  ('pip-20.1.1.dist-info\\RECORD',
-   'e:\\freelancing project\\lyrics '
-   'project\\env\\lib\\site-packages\\pip-20.1.1.dist-info\\RECORD',
-   'DATA'),
-  ('pip-20.1.1.dist-info\\WHEEL',
-   'e:\\freelancing project\\lyrics '
-   'project\\env\\lib\\site-packages\\pip-20.1.1.dist-info\\WHEEL',
-   'DATA'),
-  ('setuptools-47.1.0.dist-info\\RECORD',
-   'e:\\freelancing project\\lyrics '
-   'project\\env\\lib\\site-packages\\setuptools-47.1.0.dist-info\\RECORD',
    'DATA'),
   ('setuptools-47.1.0.dist-info\\dependency_links.txt',
    'e:\\freelancing project\\lyrics '
@@ -331,41 +323,49 @@
    'e:\\freelancing project\\lyrics '
    'project\\env\\lib\\site-packages\\setuptools-47.1.0.dist-info\\LICENSE',
    'DATA'),
-  ('pip-20.1.1.dist-info\\LICENSE.txt',
+  ('setuptools-47.1.0.dist-info\\RECORD',
    'e:\\freelancing project\\lyrics '
-   'project\\env\\lib\\site-packages\\pip-20.1.1.dist-info\\LICENSE.txt',
-   'DATA'),
-  ('pip-20.1.1.dist-info\\INSTALLER',
-   'e:\\freelancing project\\lyrics '
-   'project\\env\\lib\\site-packages\\pip-20.1.1.dist-info\\INSTALLER',
-   'DATA'),
-  ('pip-20.1.1.dist-info\\entry_points.txt',
-   'e:\\freelancing project\\lyrics '
-   'project\\env\\lib\\site-packages\\pip-20.1.1.dist-info\\entry_points.txt',
-   'DATA'),
-  ('setuptools-47.1.0.dist-info\\INSTALLER',
-   'e:\\freelancing project\\lyrics '
-   'project\\env\\lib\\site-packages\\setuptools-47.1.0.dist-info\\INSTALLER',
-   'DATA'),
-  ('pip-20.1.1.dist-info\\top_level.txt',
-   'e:\\freelancing project\\lyrics '
-   'project\\env\\lib\\site-packages\\pip-20.1.1.dist-info\\top_level.txt',
+   'project\\env\\lib\\site-packages\\setuptools-47.1.0.dist-info\\RECORD',
    'DATA'),
   ('setuptools-47.1.0.dist-info\\top_level.txt',
    'e:\\freelancing project\\lyrics '
    'project\\env\\lib\\site-packages\\setuptools-47.1.0.dist-info\\top_level.txt',
    'DATA'),
+  ('setuptools-47.1.0.dist-info\\zip-safe',
+   'e:\\freelancing project\\lyrics '
+   'project\\env\\lib\\site-packages\\setuptools-47.1.0.dist-info\\zip-safe',
+   'DATA'),
   ('setuptools-47.1.0.dist-info\\WHEEL',
    'e:\\freelancing project\\lyrics '
    'project\\env\\lib\\site-packages\\setuptools-47.1.0.dist-info\\WHEEL',
    'DATA'),
-  ('pip-20.1.1.dist-info\\METADATA',
+  ('pip-20.1.1.dist-info\\top_level.txt',
    'e:\\freelancing project\\lyrics '
-   'project\\env\\lib\\site-packages\\pip-20.1.1.dist-info\\METADATA',
+   'project\\env\\lib\\site-packages\\pip-20.1.1.dist-info\\top_level.txt',
+   'DATA'),
+  ('pip-20.1.1.dist-info\\WHEEL',
+   'e:\\freelancing project\\lyrics '
+   'project\\env\\lib\\site-packages\\pip-20.1.1.dist-info\\WHEEL',
+   'DATA'),
+  ('pip-20.1.1.dist-info\\entry_points.txt',
+   'e:\\freelancing project\\lyrics '
+   'project\\env\\lib\\site-packages\\pip-20.1.1.dist-info\\entry_points.txt',
+   'DATA'),
+  ('pip-20.1.1.dist-info\\INSTALLER',
+   'e:\\freelancing project\\lyrics '
+   'project\\env\\lib\\site-packages\\pip-20.1.1.dist-info\\INSTALLER',
+   'DATA'),
+  ('pip-20.1.1.dist-info\\RECORD',
+   'e:\\freelancing project\\lyrics '
+   'project\\env\\lib\\site-packages\\pip-20.1.1.dist-info\\RECORD',
    'DATA'),
   ('setuptools-47.1.0.dist-info\\METADATA',
    'e:\\freelancing project\\lyrics '
    'project\\env\\lib\\site-packages\\setuptools-47.1.0.dist-info\\METADATA',
+   'DATA'),
+  ('setuptools-47.1.0.dist-info\\INSTALLER',
+   'e:\\freelancing project\\lyrics '
+   'project\\env\\lib\\site-packages\\setuptools-47.1.0.dist-info\\INSTALLER',
    'DATA')],
  False,
  False,
