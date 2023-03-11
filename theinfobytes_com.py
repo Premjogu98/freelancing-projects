@@ -112,12 +112,24 @@ class LyricsThings:
             self.browser.quit()
             import sys
             sys.exit("Thank You ")
-        page_no = None
-        for get_page_no in self.browser.find_elements_by_class_name('displaying-num'):
-            # print(get_page_no.get_attribute("innerText"))
-            page_no = int(get_page_no.get_attribute("innerText").replace('items','').replace(',','').strip())
+        total_data_text = None
+        for total_data in self.browser.find_elements_by_class_name('displaying-num'):
+            total_data_text = int(total_data.get_attribute("innerText").replace('items','').replace(',','').strip())
             break
-        # print(page_no)
+        print(f"\nTotal Data Found ==>  {total_data_text}")
+        total_pages_text = None
+        for total_pages in self.browser.find_elements_by_class_name('total-pages'):
+            total_pages_text = int(total_pages.get_attribute("innerText"))
+            break
+        print(f'\nTOTAL PAGES FOUND : {total_pages_text}')
+        if total_pages_text != 1:
+            page_range = input(f'Enter Page Range eg.,(0-2 or 5-10) ==> ')
+            from_page = int(page_range.partition("-")[0].replace('-','').strip())
+            to_page = int(page_range.partition("-")[2].replace('-','').strip())
+        else:
+            from_page = 1
+            to_page = 1
+
         date = datetime.now().strftime("%Y-%m-%d-%H.%M")
         filename = f"./{date} {self.user_selected_option}_{self.date_or_year} Data.csv"
         with open(filename, mode='w',newline='',encoding='utf-8') as csv_file:
@@ -125,7 +137,7 @@ class LyricsThings:
             writer.writeheader()
 
             total_link = 1
-            for page in range(1 , page_no+1,1):
+            for page in range(from_page , to_page+1,1):
                 self.browser.get(f"https://theinfobytes.com/wp-admin/edit.php?post_status=all&post_type=post&m={self.date_or_year}&cat={self.main_filter_dict[self.user_selected_option]}&post_format&filter_action=Filter&paged={page}")
                 time.sleep(2)
                 # print(len(self.browser.find_elements_by_xpath('//*[@id="the-list"]/tr')))
@@ -174,7 +186,7 @@ class LyricsThings:
                         self.headers[4] : tags_text
                     }
                     writer.writerow(detail_dic)
-                    print(f'PAGE {str(page)}/{str(page_no)} == Link {str(total_link)}/{str(total_tr)} --> {lyric_nav_link_text}')
+                    print(f'PAGE {str(from_page)}/{str(to_page)} == Link {str(total_link)}/{str(total_data_text)} --> {lyric_nav_link_text}')
                     total_link += 1
 
         
