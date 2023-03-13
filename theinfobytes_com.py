@@ -132,6 +132,7 @@ class LyricsThings:
 
         date = datetime.now().strftime("%Y-%m-%d-%H.%M")
         filename = f"./{date} {self.user_selected_option}_{self.date_or_year} Data.csv"
+        pending_data = []
         with open(filename, mode='w',newline='',encoding='utf-8') as csv_file:
             writer = csv.DictWriter(csv_file, fieldnames=self.headers)
             writer.writeheader()
@@ -144,51 +145,56 @@ class LyricsThings:
                 total_tr = len(self.browser.find_elements_by_xpath('//*[@id="the-list"]/tr')) 
                 for tr_count  in range(1, total_tr + 1,1):
                     title_text = ''
-                    for title in self.browser.find_elements_by_xpath(f'//*[@id="the-list"]/tr[{tr_count}]/td[1]/strong'):
-                        title_text = title.get_attribute("innerText")
-                        break
-                    # print(title_text)
-
                     category_text = ''
-                    for category in self.browser.find_elements_by_xpath(f'//*[@id="the-list"]/tr[{tr_count}]/td[3]/a'):
-                        category_text += f'{category.get_attribute("innerText")},'
-                    category_text = category_text.strip().rstrip(',')
-                    # print(category_text)
-
                     tags_text = ''
-                    for tags in self.browser.find_elements_by_xpath(f'//*[@id="the-list"]/tr[{tr_count}]/td[4]/a'):
-                        tags_text += f'{tags.get_attribute("innerText")},'
-                    tags_text = tags_text.strip().rstrip(',')
-                    # print(tags_text)
-
                     released_date_text = ''
-                    for released_date in self.browser.find_elements_by_xpath(f'//*[@id="the-list"]/tr[{tr_count}]/td[6]'):
-                        released_date_text = released_date.get_attribute("innerText").replace('Published','').strip()
-                        break
-                    # print(released_date_text)
-
                     lyric_nav_link_text = ''
-                    for lyric_nav_link in self.browser.find_elements_by_xpath(f'//*[@id="the-list"]/tr[{tr_count}]/td[1]/div[3]/span[4]/a'):
-                        lyric_nav_link_text = lyric_nav_link.get_attribute("href")
-                        break
-                    # print(lyric_nav_link_text)
-                    
-                    resp = requests.get(lyric_nav_link_text)
-                    html_data = re.sub(' +', ' ', resp.text)
-                    lyrics_data = html_data.partition('class="entry-content">')[2].partition("</div>")[0].strip()
-                    # print(len(lyrics_data))
+                    try:
+                        for title in self.browser.find_elements_by_xpath(f'//*[@id="the-list"]/tr[{tr_count}]/td[1]/strong'):
+                            title_text = title.get_attribute("innerText")
+                            break
+                        # print(title_text)
 
-                    detail_dic = {
-                        self.headers[0] : released_date_text,
-                        self.headers[1] : title_text,
-                        self.headers[2] : category_text,
-                        self.headers[3] : lyrics_data,
-                        self.headers[4] : tags_text
-                    }
-                    writer.writerow(detail_dic)
-                    print(f'PAGE {str(from_page)}/{str(to_page)} == Link {str(total_link)}/{str(total_data_text)} --> {lyric_nav_link_text}')
-                    total_link += 1
+                        for category in self.browser.find_elements_by_xpath(f'//*[@id="the-list"]/tr[{tr_count}]/td[3]/a'):
+                            category_text += f'{category.get_attribute("innerText")},'
+                        category_text = category_text.strip().rstrip(',')
+                        # print(category_text)
 
+                        for tags in self.browser.find_elements_by_xpath(f'//*[@id="the-list"]/tr[{tr_count}]/td[4]/a'):
+                            tags_text += f'{tags.get_attribute("innerText")},'
+                        tags_text = tags_text.strip().rstrip(',')
+                        # print(tags_text)
+
+                        for released_date in self.browser.find_elements_by_xpath(f'//*[@id="the-list"]/tr[{tr_count}]/td[6]'):
+                            released_date_text = released_date.get_attribute("innerText").replace('Published','').strip()
+                            break
+                        # print(released_date_text)
+
+                        for lyric_nav_link in self.browser.find_elements_by_xpath(f'//*[@id="the-list"]/tr[{tr_count}]/td[1]/div[3]/span[4]/a'):
+                            lyric_nav_link_text = lyric_nav_link.get_attribute("href")
+                            break
+                        # print(lyric_nav_link_text)
+                        
+                        resp = requests.get(lyric_nav_link_text,timeout=30)
+                        if resp.status_code == 200:
+                            html_data = re.sub(' +', ' ', resp.text)
+                            lyrics_data = html_data.partition('class="entry-content">')[2].partition("</div>")[0].strip()
+                        else:
+                            raise Exception
+
+                        detail_dic = {
+                            self.headers[0] : released_date_text,
+                            self.headers[1] : title_text,
+                            self.headers[2] : category_text,
+                            self.headers[3] : lyrics_data,
+                            self.headers[4] : tags_text
+                        }
+                        writer.writerow(detail_dic)
+                        print(f'PAGE {str(from_page)}/{str(to_page)} == Link {str(total_link)}/{str(total_data_text)} --> {lyric_nav_link_text}')
+                        total_link += 1
+                    except Exception as e:
+                        error_log(e=e,source_page="theinfobytes.com")
+                        pending_data.append({'title':title_text,'category':category_text,'tags':tags_text,'released date':released_date_text,'lyrics_link':lyric_nav_link_text})
         
         print("\n\nFILE EXPORTING...........")
         if csv_to_xlsx(filename,filename.replace(".csv",".xlsx")):
@@ -199,14 +205,16 @@ class LyricsThings:
 
         os.remove(filename)
         self.browser.close()
-
+        import json
+        for data in pending_data:
+            print(json.dumps(data, indent=2))
 lyricsthings = LyricsThings()
 lyricsthings.user_input()
 lyricsthings.songs_scrap()
 
 
-wx.MessageBox(">>>>>  Data Mining Successfully Done  <<<<<", 'Success', wx.OK | wx.ICON_INFORMATION)
-input('Please Enter To Exit')
-import sys
-sys.exit("Thank You ")
-exit()
+wx.MessageBox(">>>>>  Data Mining Successfully Done <<<<< \n(PLEASE CHECK COMMAND PROMPT IF ANY MISSING DETAILS ARE THERE DO MANUAL ENTERY )", 'Success', wx.OK | wx.ICON_INFORMATION)
+# input('Please Enter To Exit')
+# import sys
+# sys.exit("Thank You ")
+# exit()
